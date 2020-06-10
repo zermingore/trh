@@ -1,3 +1,8 @@
+if ( ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} )
+  message(FATAL_ERROR "Out of tree build advised.")
+endif()
+
+
 cmake_minimum_required(VERSION 3.5)
 
 project(trh)
