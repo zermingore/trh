@@ -1,5 +1,5 @@
 if ( ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} )
-  message(FATAL_ERROR "Out of tree build advised.")
+  message(FATAL_ERROR "Out of tree build mandatory. Use the Makefile (run make, not cmake)")
 endif()
 
 
