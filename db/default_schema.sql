@@ -49,4 +49,4 @@ CREATE table words(
 
 .read default_values.sql
 
-END TRANSACTION;
+COMMIT;
