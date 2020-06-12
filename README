@@ -1,1 +1,10 @@
+Human translation / language learning tool (still looking for a relevant name)
+
 lib/sqlite.c lib/sqlite.h come from the SQLite project (https://sqlite.org)
+
+
+In order to handle your own DB (vocabulary / grammar)
+You can create a file with your own default words / supported languages
+db/custom/default_values.sql will be automatically sourced
+(You may want to create a local bare git repo to track your custom file)
+If db/custom/default_values.sql the default DB creation will print a warning

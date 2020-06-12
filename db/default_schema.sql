@@ -35,4 +35,8 @@ CREATE table words(
 
 .read default_values.sql
 
+-- user specific values
+.read custom/default_values.sql
+
+
 COMMIT;
