@@ -1,0 +1,30 @@
+-*- mode: org -*-
+#+OPTIONS: ^:nil
+#+STARTUP: showeverything
+
+
+* TODO Interface
+** TODO Meta
+*** TODO Buttons Vocabulary / Grammar
+*** TODO Gtk Scrollable area
+*** TODO Random word
+*** TODO Sub-window / swipe
+
+
+** TODO Data
+*** TODO Sort alphabetically
+*** TODO Sort last added
+
+
+** TODO Vocabulary
+*** TODO Add word
+*** TODO Edit word
+*** TODO Hide word
+
+
+** TODO Grammar
+*** TODO Display rules
+
+
+** TODO Database
+*** TODO Grammar concept
