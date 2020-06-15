@@ -7,16 +7,19 @@ cmake_minimum_required(VERSION 3.5)
 
 project(trh)
 
-find_package(Threads REQUIRED)
+find_package(PkgConfig)
+pkg_check_modules(GTK3 gtk+-3.0)
 
+find_package(Threads REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpthread -ldl")
 
 include_directories("${PROJECT_SOURCE_DIR}/")
+include_directories("${GTK3_INCLUDE_DIRS}")
 
 set(SRC src/main.cc lib/sqlite3.c)
 set(HDR lib/sqlite3.h)
 add_executable(trh ${SRC} ${HDR})
 
-target_link_libraries(trh Threads::Threads)
+target_link_libraries(trh Threads::Threads ${GTK3_LIBRARIES})
