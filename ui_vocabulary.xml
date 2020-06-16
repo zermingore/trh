@@ -1,0 +1,22 @@
+<interface>
+  <object id="window" class="GtkWindow">
+    <property name="visible">True</property>
+    <property name="title">trh</property>
+    <property name="border-width">0</property>
+    <child>
+      <object id="grid" class="GtkGrid">
+        <property name="visible">True</property>
+
+        <child>
+          <object id="vocabulary" class="GtkButton">
+            <property name="visible">True</property>
+            <property name="label">SECOND UI</property>
+            <accelerator key="V" signal="clicked"/>
+          </object>
+        </child>
+      </object>
+      <packing>
+      </packing>
+    </child>
+  </object>
+</interface>
