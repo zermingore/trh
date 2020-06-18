@@ -12,7 +12,7 @@ enum class e_db_words_col {
   LANGUAGE,
   CATEGORY,
   NAME,
-  N_COLUMNS
+  NB_COLUMNS
 };
 
 
@@ -80,15 +80,9 @@ int main(int argc, char **argv)
   gtk_box_pack_start(box, GTK_WIDGET(switcher), FALSE, FALSE, 6);
   gtk_box_pack_start(box, GTK_WIDGET(stack), TRUE, TRUE, 6);
 
-  // GObject *vocabulary = gtk_builder_get_object(builder, "vocabulary");
-  // g_signal_connect(vocabulary, "clicked", G_CALLBACK(vocabulary_cb), NULL);
 
-
-
-  GtkCellRenderer *renderer;
-  GtkTreeViewColumn *column;
-
-  GtkListStore *store = gtk_list_store_new(4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+  GtkListStore *store = gtk_list_store_new(
+    (int) e_db_words_col::NB_COLUMNS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
   sqlite3 *db;
   if (sqlite3_open("db.sql", &db))
@@ -96,9 +90,7 @@ int main(int argc, char **argv)
     std::cerr << "Failure opening DB:\n\t" << sqlite3_errmsg(db) << '\n';
     return 1;
   }
-
   std::cout << "DB OPENED\n";
-
 
   const char *request = "SELECT * FROM words";
   char *err_msg = 0;
@@ -110,20 +102,13 @@ int main(int argc, char **argv)
     sqlite3_close(db);
     return 1;
   }
-
   sqlite3_close(db);
 
-  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   GtkWidget *list = gtk_tree_view_new();
 
-  // CREATE 3 COLUMNS WITH TEXT CELL RENDERERS
-
-  // renderer = gtk_cell_renderer_text_new();
-  // column = gtk_tree_view_column_new_with_attributes("ID", renderer, "text", ID, NULL);
-  // gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
-
-  renderer = gtk_cell_renderer_text_new();
-  column = gtk_tree_view_column_new_with_attributes("language", renderer, "text", 1, NULL);
+  GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+  GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes(
+    "language", renderer, "text", 1, NULL);
   gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
 
   renderer = gtk_cell_renderer_text_new();
@@ -138,15 +123,11 @@ int main(int argc, char **argv)
 
   g_object_unref(store); // treeview keeps a reference on it
 
-
   gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(list), FALSE);
 
-  GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-  gtk_box_pack_start(GTK_BOX(vbox), list, TRUE, TRUE, 5);
+  gtk_box_pack_start(GTK_BOX(box), list, TRUE, TRUE, 5);
   GtkWidget *label = gtk_label_new("");
-  gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 5);
-
-  gtk_container_add(GTK_CONTAINER(window), vbox);
+  gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 5);
 
   gtk_widget_show_all(window);
 
