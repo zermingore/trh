@@ -5,14 +5,17 @@
 
 * TODO Interface
 ** TODO Meta
-*** TODO Buttons Vocabulary / Grammar
-*** TODO Gtk Scrollable area
+*** DONE Buttons Vocabulary / Grammar
+    CLOSED: [2020-06-18 Thu 19:58]
+*** DONE Gtk Scrollable area
+    CLOSED: [2020-06-18 Thu 19:58]
 *** TODO Random word
 *** TODO Sub-window / swipe
 
 
 ** TODO Data
-*** TODO Sort alphabetically
+*** DONE Sort alphabetically
+    CLOSED: [2020-06-18 Thu 19:58]
 *** TODO Sort last added
 
 
