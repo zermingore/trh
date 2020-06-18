@@ -7,6 +7,18 @@ extern "C" {
 }
 
 
+enum class e_db_words_col {
+  ID,
+  LANGUAGE,
+  CATEGORY,
+  NAME,
+  N_COLUMNS
+};
+
+
+int callback(void *, int, char **, char **);
+
+
 
 static void vocabulary_cb(GtkWidget */* unused */, gpointer /* unused */)
 {
@@ -17,6 +29,22 @@ static void vocabulary_cb(GtkWidget */* unused */, gpointer /* unused */)
     g_printerr("Error loading UI file: %s\n", error->message);
     g_clear_error(&error);
   }
+}
+
+
+
+int callback(void *model, int argc, char **argv, char **azColName)
+{
+   GtkTreeIter iter;
+   gtk_list_store_append(GTK_LIST_STORE(model), &iter);
+   gtk_list_store_set(GTK_LIST_STORE(model), &iter,
+                      e_db_words_col::ID, argv[0],
+                      e_db_words_col::LANGUAGE, argv[1],
+                      e_db_words_col::CATEGORY, argv[2],
+                      e_db_words_col::NAME, argv[3],
+                      -1);
+
+   return 0;
 }
 
 
@@ -34,7 +62,7 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  GObject *window = gtk_builder_get_object(builder, "window");
+  GtkWidget *window = (GtkWidget*) gtk_builder_get_object(builder, "window");
   g_signal_connect(G_OBJECT(window), "destroy", gtk_main_quit, NULL);
 
   GtkBox *box = (GtkBox*) gtk_builder_get_object(builder, "box");
@@ -55,20 +83,74 @@ int main(int argc, char **argv)
   // GObject *vocabulary = gtk_builder_get_object(builder, "vocabulary");
   // g_signal_connect(vocabulary, "clicked", G_CALLBACK(vocabulary_cb), NULL);
 
-  gtk_widget_show_all(GTK_WIDGET(window));
 
-  gtk_main();
 
+  GtkCellRenderer *renderer;
+  GtkTreeViewColumn *column;
+
+  GtkListStore *store = gtk_list_store_new(4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
   sqlite3 *db;
-  if (sqlite3_open("/", &db))
+  if (sqlite3_open("db.sql", &db))
   {
     std::cerr << "Failure opening DB:\n\t" << sqlite3_errmsg(db) << '\n';
     return 1;
   }
 
   std::cout << "DB OPENED\n";
+
+
+  const char *request = "SELECT * FROM words";
+  char *err_msg = 0;
+  int rc = sqlite3_exec(db, request, callback, store, &err_msg);
+  if (rc != SQLITE_OK )
+  {
+    std::cerr << "Error selecting DB data:\n\t" << err_msg << '\n';
+    sqlite3_free(err_msg);
+    sqlite3_close(db);
+    return 1;
+  }
+
   sqlite3_close(db);
+
+  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  GtkWidget *list = gtk_tree_view_new();
+
+  // CREATE 3 COLUMNS WITH TEXT CELL RENDERERS
+
+  // renderer = gtk_cell_renderer_text_new();
+  // column = gtk_tree_view_column_new_with_attributes("ID", renderer, "text", ID, NULL);
+  // gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
+
+  renderer = gtk_cell_renderer_text_new();
+  column = gtk_tree_view_column_new_with_attributes("language", renderer, "text", 1, NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
+
+  renderer = gtk_cell_renderer_text_new();
+  column = gtk_tree_view_column_new_with_attributes("category", renderer, "text", 2, NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
+
+  renderer = gtk_cell_renderer_text_new();
+  column = gtk_tree_view_column_new_with_attributes("name", renderer, "text", 3, NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
+
+  gtk_tree_view_set_model(GTK_TREE_VIEW(list), GTK_TREE_MODEL(store));
+
+  g_object_unref(store); // treeview keeps a reference on it
+
+
+  gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(list), FALSE);
+
+  GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), list, TRUE, TRUE, 5);
+  GtkWidget *label = gtk_label_new("");
+  gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 5);
+
+  gtk_container_add(GTK_CONTAINER(window), vbox);
+
+  gtk_widget_show_all(window);
+
+  gtk_main();
 
   return 0;
 }
