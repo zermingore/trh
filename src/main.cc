@@ -92,7 +92,7 @@ int main(int argc, char **argv)
   }
   std::cout << "DB OPENED\n";
 
-  const char *request = "SELECT * FROM words";
+  const char *request = "SELECT * FROM words ORDER BY name ASC";
   char *err_msg = 0;
   int rc = sqlite3_exec(db, request, callback, store, &err_msg);
   if (rc != SQLITE_OK )
