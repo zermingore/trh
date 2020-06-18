@@ -104,8 +104,7 @@ int main(int argc, char **argv)
   }
   sqlite3_close(db);
 
-  GtkWidget *list = gtk_tree_view_new();
-
+  GtkWidget *list = (GtkWidget*) gtk_builder_get_object(builder, "list");
   GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
   GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes(
     "language", renderer, "text", 1, NULL);
@@ -121,7 +120,7 @@ int main(int argc, char **argv)
 
   gtk_tree_view_set_model(GTK_TREE_VIEW(list), GTK_TREE_MODEL(store));
 
-  g_object_unref(store); // treeview keeps a reference on it
+  g_object_unref(store);
 
   gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(list), FALSE);
 
@@ -129,8 +128,8 @@ int main(int argc, char **argv)
   GtkWidget *label = gtk_label_new("");
   gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 5);
 
-  gtk_widget_show_all(window);
 
+  gtk_widget_show_all(window);
   gtk_main();
 
   return 0;

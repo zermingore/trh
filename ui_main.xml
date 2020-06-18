@@ -23,6 +23,22 @@
             <property name="visible">True</property>
           </object>
         </child>
+        <child>
+          <object class="GtkScrolledWindow" id="scrolledwindow1">
+            <property name="visible">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <child>
+              <object class="GtkTreeView" id="list">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <!-- <property name="model">list</property> -->
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
   </object>
