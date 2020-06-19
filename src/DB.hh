@@ -3,6 +3,7 @@
 
 # include <string>
 
+struct sqlite3;
 
 /**
  * @class DB
@@ -19,13 +20,14 @@ public:
    */
   static void initialize(const std::string file_name);
 
-
   /**
    * @brief Get every words, sorted alphabetically
+   * @param cb Callback function
+   * @param first first result
    * @warning throws
    */
-  static void getWordsSorted();
-
+  static void getWordsSorted(int (*cb) (void*, int, char**, char**),
+                             void *first);
 
   /**
    * @brief Wrapper around sqlite3_exec
@@ -36,6 +38,16 @@ public:
   static void rawRequest(const std::string request,
                          int (*cb) (void*, int, char**, char**),
                          void *first);
+
+  /**
+   * @brief Properly close the Database file
+   */
+  static void close();
+
+
+
+private:
+  static sqlite3 *_db; ///< Database
 };
 
 #endif /* !DB_HH_ */

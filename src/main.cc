@@ -6,6 +6,9 @@ extern "C" {
 #include <lib/sqlite3.h>
 }
 
+#include <DB.hh>
+
+
 
 enum class e_db_words_col {
   ID,
@@ -77,25 +80,9 @@ int main(int argc, char **argv)
   GtkListStore *store = gtk_list_store_new(
     (int) e_db_words_col::NB_COLUMNS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
-  sqlite3 *db;
-  if (sqlite3_open("db.sql", &db))
-  {
-    std::cerr << "Failure opening DB:\n\t" << sqlite3_errmsg(db) << '\n';
-    return 1;
-  }
-  std::cout << "DB OPENED\n";
-
-  const char *request = "SELECT * FROM words ORDER BY name ASC";
-  char *err_msg = 0;
-  int rc = sqlite3_exec(db, request, callback, store, &err_msg);
-  if (rc != SQLITE_OK )
-  {
-    std::cerr << "Error selecting DB data:\n\t" << err_msg << '\n';
-    sqlite3_free(err_msg);
-    sqlite3_close(db);
-    return 1;
-  }
-  sqlite3_close(db);
+  DB::initialize("db.sql");
+  DB::getWordsSorted(callback, store);
+  DB::close();
 
   GtkWidget *vocabularyList = (GtkWidget*) gtk_builder_get_object(builder, "vocabularyList");
   GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
