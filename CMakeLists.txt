@@ -8,8 +8,8 @@ cmake_minimum_required(VERSION 3.5)
 project(trh)
 
 find_package(PkgConfig)
-pkg_check_modules(GTK3 gtk+-3.0)
-pkg_check_modules(GTKMM gtkmm-3.0)
+pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
 
 find_package(Threads REQUIRED)
 
@@ -23,7 +23,7 @@ include_directories("${GTKMM_INCLUDE_DIRS}")
 
 link_directories("${GTKMM_LIBRARY_DIRS}")
 
-set(SRC src/main.cc src/DB.cc lib/sqlite3.c)
+set(SRC src/main.cc src/DB.cc src/MainWindow.cc lib/sqlite3.c)
 set(HDR src/DB.hh lib/sqlite3.h)
 add_executable(trh ${SRC} ${HDR})
 
