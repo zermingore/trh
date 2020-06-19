@@ -65,7 +65,6 @@ int main(int argc, char **argv)
   GtkWidget *window = (GtkWidget*) gtk_builder_get_object(builder, "window");
   g_signal_connect(G_OBJECT(window), "destroy", gtk_main_quit, NULL);
 
-  GtkBox *box = (GtkBox*) gtk_builder_get_object(builder, "box");
   GtkStack *stack = (GtkStack*) gtk_builder_get_object(builder, "stack");
   GtkStackSwitcher *switcher = (GtkStackSwitcher*) gtk_builder_get_object(builder, "switcher");
 
@@ -77,8 +76,8 @@ int main(int argc, char **argv)
 
   gtk_widget_set_halign(GTK_WIDGET(switcher), GTK_ALIGN_CENTER);
 
-  gtk_box_pack_start(box, GTK_WIDGET(switcher), FALSE, FALSE, 6);
-  gtk_box_pack_start(box, GTK_WIDGET(stack), TRUE, TRUE, 6);
+  GtkWidget *vocabularyView = (GtkWidget*) gtk_builder_get_object(builder, "vocabularyView");
+  gtk_stack_set_visible_child(stack, vocabularyView);
 
 
   GtkListStore *store = gtk_list_store_new(
@@ -119,14 +118,8 @@ int main(int argc, char **argv)
   gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
 
   gtk_tree_view_set_model(GTK_TREE_VIEW(list), GTK_TREE_MODEL(store));
-
   g_object_unref(store);
-
   gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(list), FALSE);
-
-  gtk_box_pack_start(GTK_BOX(box), list, TRUE, TRUE, 5);
-  GtkWidget *label = gtk_label_new("");
-  gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 5);
 
 
   gtk_widget_show_all(window);
