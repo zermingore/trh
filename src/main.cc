@@ -1,6 +1,8 @@
 #include <iostream>
 
 #include <gtk/gtk.h>
+#include <gtkmm/application.h>
+
 
 extern "C" {
 #include <lib/sqlite3.h>
@@ -54,6 +56,9 @@ int callback(void *model, int argc, char **argv, char **azColName)
 
 int main(int argc, char **argv)
 {
+  auto app = Gtk::Application::create(argc, argv, "com.nulmail.trh");
+
+
   gtk_init(&argc, &argv);
 
   GtkBuilder *builder = gtk_builder_new();

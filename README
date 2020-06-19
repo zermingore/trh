@@ -8,3 +8,8 @@ You can create a file with your own default words / supported languages
 db/custom/default_values.sql will be automatically sourced
 (You may want to create a local bare git repo to track your custom file)
 If db/custom/default_values.sql the default DB creation will print a warning
+
+
+
+In order to compile, you will need the gtk3 and its C++ interface libraries.
+Debian package names: libgtk-3-dev libgtkmm-3.0-dev
