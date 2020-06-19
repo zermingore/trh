@@ -23,6 +23,8 @@
         <child>
           <object class="GtkStack" id="stack">
             <property name="visible">True</property>
+            <property name="transition-type">crossfade</property>
+
             <child>
               <object class="GtkScrolledWindow" id="vocabularyView">
                 <property name="visible">True</property>
@@ -38,11 +40,36 @@
                   </object>
                 </child>
               </object>
+              <packing>
+                <property name="title" translatable="yes">Vocabulary</property>
+              </packing>
             </child>
+
+            <child>
+              <object class="GtkScrolledWindow" id="grammarView">
+                <property name="visible">True</property>
+                <property name="hscrollbar_policy">automatic</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="GtkTreeView" id="grammarList">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <!-- <property name="model">list</property> -->
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="title" translatable="yes">Grammar</property>
+              </packing>
+            </child>
+
           </object>
         </child>
 
       </object>
     </child>
+
   </object>
 </interface>

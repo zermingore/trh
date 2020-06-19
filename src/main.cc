@@ -68,12 +68,6 @@ int main(int argc, char **argv)
   GtkStack *stack = (GtkStack*) gtk_builder_get_object(builder, "stack");
   GtkStackSwitcher *switcher = (GtkStackSwitcher*) gtk_builder_get_object(builder, "switcher");
 
-  GtkLabel *labelGrammar = GTK_LABEL(gtk_label_new("Grammar"));
-  GtkLabel *labelVocabulary = GTK_LABEL(gtk_label_new("Vocabulary"));
-
-  gtk_stack_add_titled(stack, GTK_WIDGET(labelGrammar), "Grammar", "Grammar");
-  gtk_stack_add_titled(stack, GTK_WIDGET(labelVocabulary), "Vocabulary", "Vocabulary");
-
   gtk_widget_set_halign(GTK_WIDGET(switcher), GTK_ALIGN_CENTER);
 
   GtkWidget *vocabularyView = (GtkWidget*) gtk_builder_get_object(builder, "vocabularyView");
