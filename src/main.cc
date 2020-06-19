@@ -97,23 +97,23 @@ int main(int argc, char **argv)
   }
   sqlite3_close(db);
 
-  GtkWidget *list = (GtkWidget*) gtk_builder_get_object(builder, "list");
+  GtkWidget *vocabularyList = (GtkWidget*) gtk_builder_get_object(builder, "vocabularyList");
   GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
   GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes(
     "language", renderer, "text", 1, NULL);
-  gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
+  gtk_tree_view_append_column(GTK_TREE_VIEW(vocabularyList), column);
 
   renderer = gtk_cell_renderer_text_new();
   column = gtk_tree_view_column_new_with_attributes("category", renderer, "text", 2, NULL);
-  gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
+  gtk_tree_view_append_column(GTK_TREE_VIEW(vocabularyList), column);
 
   renderer = gtk_cell_renderer_text_new();
   column = gtk_tree_view_column_new_with_attributes("name", renderer, "text", 3, NULL);
-  gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
+  gtk_tree_view_append_column(GTK_TREE_VIEW(vocabularyList), column);
 
-  gtk_tree_view_set_model(GTK_TREE_VIEW(list), GTK_TREE_MODEL(store));
+  gtk_tree_view_set_model(GTK_TREE_VIEW(vocabularyList), GTK_TREE_MODEL(store));
   g_object_unref(store);
-  gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(list), FALSE);
+  gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(vocabularyList), FALSE);
 
 
   gtk_widget_show_all(window);
