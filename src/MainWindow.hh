@@ -20,12 +20,7 @@ public:
   }
 
   /**
-   * @brief Main loop
-   */
-  //int run();
-
-  /**
-   * @brief Destructor. Closes the DB
+   * @brief Default destructor
    */
   virtual ~MainWindow() = default;
 
