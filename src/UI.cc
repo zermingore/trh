@@ -17,6 +17,8 @@ extern "C" {
 
 
 #include <UI.hh>
+
+#include <DB.hh>
 #include <MainWindow.hh>
 
 
@@ -34,20 +36,6 @@ enum class e_db_words_col {
 int callback(void *, int, char **, char **);
 
 
-
-static void vocabulary_cb(GtkWidget */* unused */, gpointer /* unused */)
-{
-  GtkBuilder *builder = gtk_builder_new();
-  GError *error = NULL;
-  if (!gtk_builder_add_from_file(builder, "ui_vocabulary.xml", &error)) // 0 on error
-  {
-    g_printerr("Error loading UI file: %s\n", error->message);
-    g_clear_error(&error);
-  }
-}
-
-
-
 int callback(void *model, int argc, char **argv, char **azColName)
 {
   GtkTreeIter iter;
@@ -59,7 +47,7 @@ int callback(void *model, int argc, char **argv, char **azColName)
                      e_db_words_col::NAME, argv[3],
                      -1);
 
-   return 0;
+  return 0;
 }
 
 
@@ -111,25 +99,9 @@ UI::UI(int argc, char *argv[])
   GtkListStore *store = gtk_list_store_new(
     (int) e_db_words_col::NB_COLUMNS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
-  sqlite3 *db;
-  if (sqlite3_open("db.sql", &db))
-  {
-    std::cerr << "Failure opening DB:\n\t" << sqlite3_errmsg(db) << '\n';
-    return;
-  }
-  std::cout << "DB OPENED\n";
-
-  const char *request = "SELECT * FROM words ORDER BY name ASC";
-  char *err_msg = 0;
-  int rc = sqlite3_exec(db, request, callback, store, &err_msg);
-  if (rc != SQLITE_OK )
-  {
-    std::cerr << "Error selecting DB data:\n\t" << err_msg << '\n';
-    sqlite3_free(err_msg);
-    sqlite3_close(db);
-    return;
-  }
-  sqlite3_close(db);
+  DB::initialize("db.sql");
+  DB::getWordsSorted(callback, store);
+  DB::close();
 
   Gtk::Widget *vocabularyList;
   builder->get_widget("vocabularyList", vocabularyList);
