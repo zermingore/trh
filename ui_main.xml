@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object id="window" class="GtkWindow">
-    <property name="visible">True</property>
+  <object class="GtkApplicationWindow" id="window">
     <property name="title">trh</property>
     <property name="border-width">0</property>
     <child>
