@@ -8,8 +8,8 @@ cmake_minimum_required(VERSION 3.5)
 project(trh)
 
 find_package(PkgConfig)
-pkg_check_modules(GTK3 gtk+-3.0)
-pkg_check_modules(GTKMM gtkmm-3.0)
+pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
 
 find_package(Threads REQUIRED)
 
