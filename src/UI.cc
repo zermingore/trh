@@ -23,8 +23,28 @@
 UI::UI(int argc, char *argv[])
 {
   _app = Gtk::Application::create(argc, argv, "com.nulmail.trh");
+
   auto builder = Gtk::Builder::create();
-  builder->add_from_file("ui_main.xml");
+
+  try
+  {
+    builder->add_from_file("ui_main.xml");
+  }
+  catch (const Glib::FileError& e)
+  {
+    std::cerr << "GtkBuilder FileError: " << e.what() << '\n';
+    throw e;
+  }
+  catch (const Glib::MarkupError& e)
+  {
+    std::cerr << "GtkBuilder MarkupError: " << e.what() << '\n';
+    throw e;
+  }
+  catch (const Gtk::BuilderError& e)
+  {
+    std::cerr << "GtkBuilder BuilderError: " << e.what() << '\n';
+    throw e;
+  }
 
   builder->get_widget_derived("window", _window);
 }
