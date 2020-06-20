@@ -1,9 +1,11 @@
-#include <UI.hh>
+#include <MainWindow.hh>
 
 
 
 int main(int argc, char* argv[])
 {
-  UI ui(argc, argv);
-  return ui.run();
+  auto app = Gtk::Application::create(argc, argv, "com.nulmail.trh");
+  MainWindow window;
+
+  return app->run(window);
 }
