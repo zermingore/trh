@@ -5,24 +5,6 @@
 
 
 
-class DbTableWords: public Gtk::TreeModel::ColumnRecord
-{
-public:
-  DbTableWords() {
-    add(id);
-    add(language);
-    add(category);
-    add(name);
-  }
-
-  Gtk::TreeModelColumn<unsigned int> id;
-  Gtk::TreeModelColumn<short> language;
-  Gtk::TreeModelColumn<short> category;
-  Gtk::TreeModelColumn<Glib::ustring> name;
-};
-
-
-
 class MainWindow: public Gtk::Window
 {
 public:

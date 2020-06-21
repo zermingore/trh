@@ -45,6 +45,9 @@ public:
   static void close();
 
 
+  static int dbFetchWords(void *model, int argc, char **argv, char **azColName);
+
+
 
 private:
   static sqlite3 *_db; ///< Database

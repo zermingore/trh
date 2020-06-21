@@ -1,11 +1,15 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <DB.hh>
+#include <gtkmm.h>
 
 extern "C" {
 #include <lib/sqlite3.h>
 }
+
+#include <DB.hh>
+#include <db_tables.hh>
+
 
 
 // Static members definition
@@ -53,4 +57,20 @@ void DB::rawRequest(const std::string request,
 void DB::close()
 {
   sqlite3_close(_db);
+}
+
+
+
+
+int DB::dbFetchWords(void *model, int argc, char **argv, char **azColName)
+{
+  Gtk::ListStore *treeModel = (Gtk::ListStore *) model;
+  Gtk::TreeModel::Row row = *(treeModel->append());
+  DbTableColumnsWords tableCol;
+  row[tableCol.id] = std::stoi(argv[0]);
+  row[tableCol.language] = std::stoi(argv[1]);
+  row[tableCol.category] = std::stoi(argv[2]);
+  row[tableCol.name] = argv[3];
+
+  return 0;
 }

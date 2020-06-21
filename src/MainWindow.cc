@@ -5,21 +5,7 @@
 
 #include <MainWindow.hh>
 #include <DB.hh>
-
-
-
-int dbFetchWords(void *model, int argc, char **argv, char **azColName)
-{
-  Gtk::ListStore *treeModel = (Gtk::ListStore *) model;
-  Gtk::TreeModel::Row row = *(treeModel->append());
-  DbTableWords tableCol;
-  row[tableCol.id] = std::stoi(argv[0]);
-  row[tableCol.language] = std::stoi(argv[1]);
-  row[tableCol.category] = std::stoi(argv[2]);
-  row[tableCol.name] = argv[3];
-
-  return 0;
-}
+#include <db_tables.hh>
 
 
 
@@ -50,7 +36,7 @@ MainWindow::MainWindow()
   builder->get_widget("box", box);
   add(*box);
 
-  DbTableWords tableColumnsWords;
+  DbTableColumnsWords tableColumnsWords;
   Gtk::TreeView* vocabularyList = nullptr;
   builder->get_widget("vocabularyList", vocabularyList);
   Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
@@ -58,7 +44,7 @@ MainWindow::MainWindow()
   vocabularyList->set_headers_visible(false);
 
   DB::initialize("db.sql");
-  DB::getWordsSorted(dbFetchWords, (void*) treeModel.get());
+  DB::getWordsSorted(DB::dbFetchWords, (void*) treeModel.get());
   DB::close();
 
   vocabularyList->append_column("Name", tableColumnsWords.name);

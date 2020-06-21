@@ -24,7 +24,7 @@ include_directories("${GTKMM_INCLUDE_DIRS}")
 link_directories("${GTKMM_LIBRARY_DIRS}")
 
 set(SRC src/main.cc src/DB.cc src/MainWindow.cc lib/sqlite3.c)
-set(HDR src/DB.hh src/MainWindow.hh lib/sqlite3.h)
+set(HDR src/DB.hh src/db_tables.hh src/MainWindow.hh lib/sqlite3.h)
 add_executable(trh ${SRC} ${HDR})
 
 target_link_libraries(trh Threads::Threads ${GTK3_LIBRARIES} ${GTKMM_LIBRARIES})
