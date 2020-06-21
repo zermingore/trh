@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object id="window" class="GtkWindow">
-    <property name="visible">True</property>
-    <property name="title">trh</property>
-    <property name="border-width">0</property>
-    <child>
+  <!-- <object class="GtkApplicationWindow" id="window"> -->
+  <!--   <property name="title">trh</property> -->
+  <!--   <property name="border-width">0</property> -->
+
+  <!--   <child> -->
       <object class="GtkBox" id="box">
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
@@ -69,7 +70,7 @@
         </child>
 
       </object>
-    </child>
+  <!--   </child> -->
 
-  </object>
+  <!-- </object> -->
 </interface>
