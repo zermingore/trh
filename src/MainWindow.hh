@@ -10,6 +10,8 @@ class MainWindow: public Gtk::Window
 public:
   MainWindow();
   virtual ~MainWindow() = default;
+
+  void on_selection_changed(Glib::RefPtr<Gtk::TreeSelection> selection);
 };
 
 

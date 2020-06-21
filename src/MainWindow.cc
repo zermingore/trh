@@ -9,6 +9,19 @@
 
 
 
+void MainWindow::on_selection_changed(Glib::RefPtr<Gtk::TreeSelection> selection)
+{
+  Gtk::TreeModel::iterator iter = selection->get_selected();
+  if (iter)
+  {
+    Gtk::TreeModel::Row row = *iter;
+    DbTableColumnsWords tableCol;
+    std::cout << "selected: " << row[tableCol.name] << std::endl;
+  }
+}
+
+
+
 MainWindow::MainWindow()
 {
   auto builder = Gtk::Builder::create();
@@ -42,6 +55,10 @@ MainWindow::MainWindow()
   Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
   vocabularyList->set_model(treeModel);
   vocabularyList->set_headers_visible(false);
+
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
+  refTreeSelection->signal_changed().connect(
+    sigc::bind(sigc::mem_fun(*this, &MainWindow::on_selection_changed), refTreeSelection));
 
   DB::initialize("db.sql");
   DB::getWordsSorted(DB::dbFetchWords, (void*) treeModel.get());
