@@ -53,13 +53,6 @@ protected:
 
 
   DbTableWords m_Columns;
-
-  //Child widgets:
-  Gtk::Box m_VBox;
-
-  Gtk::ScrolledWindow m_ScrolledWindow;
-  Gtk::TreeView vocabularyList;
-  Glib::RefPtr<Gtk::ListStore> m_refTreeModel;
 };
 
 
