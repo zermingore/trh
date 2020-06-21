@@ -17,6 +17,11 @@ void MainWindow::on_selection_changed(Glib::RefPtr<Gtk::TreeSelection> selection
     Gtk::TreeModel::Row row = *iter;
     DbTableColumnsWords tableCol;
     std::cout << "selected: " << row[tableCol.name] << std::endl;
+    row[tableCol.name] = "lol";
+
+    DbTableColumnsTranslations tableTranslation;
+    Glib::RefPtr<Gtk::ListStore> store = Gtk::ListStore::create(tableTranslation);
+    DB::getTranslations(row[tableCol.id], DB::fetchTranslations, (void *) store.get());
   }
 }
 

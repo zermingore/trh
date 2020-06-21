@@ -3,6 +3,8 @@
 
 #include <gtkmm.h>
 
+
+
 class DbTableColumnsWords: public Gtk::TreeModel::ColumnRecord
 {
 public:
@@ -17,6 +19,20 @@ public:
   Gtk::TreeModelColumn<short> language;
   Gtk::TreeModelColumn<short> category;
   Gtk::TreeModelColumn<Glib::ustring> name;
+};
+
+
+
+class DbTableColumnsTranslations: public Gtk::TreeModel::ColumnRecord
+{
+public:
+  DbTableColumnsTranslations() {
+    add(id_word_src);
+    add(id_word_dst);
+  }
+
+  Gtk::TreeModelColumn<unsigned int> id_word_src;
+  Gtk::TreeModelColumn<unsigned int> id_word_dst;
 };
 
 

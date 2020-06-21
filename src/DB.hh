@@ -30,6 +30,16 @@ public:
                              void *first);
 
   /**
+   * @brief Get the translations of the give word
+   * @param cb Callback function
+   * @param first first result
+   * @warning throws
+   */
+  static void getTranslations(int word_src_id,
+                              int (*cb) (void*, int, char**, char**),
+                              void *first);
+
+  /**
    * @brief Wrapper around sqlite3_exec
    * @param request Raw SQL request string
    * @param cb Callback function
@@ -46,6 +56,8 @@ public:
 
 
   static int dbFetchWords(void *model, int argc, char **argv, char **azColName);
+
+  static int fetchTranslations(void *model, int argc, char **argv, char **azColName);
 
 
 

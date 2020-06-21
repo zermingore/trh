@@ -37,6 +37,17 @@ void DB::getWordsSorted(int (*cb) (void*, int, char**, char**),
 }
 
 
+void DB::getTranslations(int word_src_id,
+                         int (*cb) (void*, int, char**, char**),
+                         void *first)
+{
+  auto request {"SELECT * FROM translations WHERE id_word_src = "
+                + std::to_string(word_src_id)};
+  std::cout << "request: " << request << std::endl;
+  rawRequest(request.c_str(), cb, first);
+}
+
+
 
 void DB::rawRequest(const std::string request,
                     int (*cb) (void*, int, char**, char**),
@@ -71,6 +82,20 @@ int DB::dbFetchWords(void *model, int argc, char **argv, char **azColName)
   row[tableCol.language] = std::stoi(argv[1]);
   row[tableCol.category] = std::stoi(argv[2]);
   row[tableCol.name] = argv[3];
+
+  return 0;
+}
+
+
+
+int DB::fetchTranslations(void *model, int argc, char **argv, char **azColName)
+{
+  std::cout << "reached fetchTranslations" << std::endl;
+  Gtk::ListStore *treeModel = (Gtk::ListStore *) model;
+  Gtk::TreeModel::Row row = *(treeModel->append());
+  DbTableColumnsTranslations tableCol;
+  row[tableCol.id_word_src] = std::stoi(argv[0]);
+  row[tableCol.id_word_dst] = std::stoi(argv[1]);
 
   return 0;
 }
