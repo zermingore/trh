@@ -58,7 +58,7 @@ protected:
   Gtk::Box m_VBox;
 
   Gtk::ScrolledWindow m_ScrolledWindow;
-  Gtk::TreeView m_TreeView;
+  Gtk::TreeView vocabularyList;
   Glib::RefPtr<Gtk::ListStore> m_refTreeModel;
 };
 
