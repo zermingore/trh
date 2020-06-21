@@ -60,9 +60,7 @@ MainWindow::MainWindow()
   refTreeSelection->signal_changed().connect(
     sigc::bind(sigc::mem_fun(*this, &MainWindow::on_selection_changed), refTreeSelection));
 
-  DB::initialize("db.sql");
   DB::getWordsSorted(DB::dbFetchWords, (void*) treeModel.get());
-  DB::close();
 
   vocabularyList->append_column("Name", tableColumnsWords.name);
 
