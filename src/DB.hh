@@ -22,12 +22,11 @@ public:
 
   /**
    * @brief Get every words, sorted alphabetically
-   * @param cb Callback function
+   * @param language_id language to retrieve the words from
    * @param first first result
    * @warning throws
    */
-  static void getWordsSorted(int (*cb) (void*, int, char**, char**),
-                             void *first);
+  static void getWordsLanguageSorted(int language_id, void *first);
 
   /**
    * @brief Get a specific word

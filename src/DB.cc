@@ -29,11 +29,11 @@ void DB::initialize(const std::string file_name)
 
 
 
-void DB::getWordsSorted(int (*cb) (void*, int, char**, char**),
-                        void *first)
+void DB::getWordsLanguageSorted(int language_id, void *first)
 {
-  const char *request = "SELECT * FROM words ORDER BY name ASC";
-  rawRequest(request, cb, first);
+  const std::string request =
+    "SELECT * FROM words WHERE id_language=" + std::to_string(language_id) + " ORDER BY name ASC";
+  rawRequest(request.c_str(), dbFetchWords, first);
 }
 
 
