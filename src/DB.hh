@@ -30,6 +30,14 @@ public:
                              void *first);
 
   /**
+   * @brief Get a specific word
+   * @param word_id id of the word to fetch
+   * @param first first result
+   * @warning throws
+   */
+  static void getWord(int word_id, void *first);
+
+  /**
    * @brief Get the translations of the give word
    * @param cb Callback function
    * @param first first result
