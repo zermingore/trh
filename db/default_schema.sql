@@ -53,6 +53,24 @@ CREATE TABLE words(
 
 
 
+CREATE TABLE grammar_rules(
+  id INTEGER PRIMARY KEY,
+
+  title TEXT,
+  content TEXT
+);
+
+
+
+CREATE TABLE grammar_examples(
+  id INTEGER PRIMARY KEY,
+  id_rule INTEGER NOT NULL,
+
+  FOREIGN KEY(id_rule) REFERENCES grammar_rules(id)
+);
+
+
+
 .read default_values.sql
 
 -- user specific values
