@@ -32,10 +32,11 @@ CREATE TABLE translations(
 
 
 CREATE TABLE plurals(
-  id_word INTEGER NOT NULL,
-  name TEXT,
+  id_word_singular INTEGER NOT NULL,
+  id_word_plural INTEGER NOT NULL,
 
-  FOREIGN KEY(id_word) REFERENCES words(id)
+  FOREIGN KEY(id_word_singular) REFERENCES words(id)
+  FOREIGN KEY(id_word_plural) REFERENCES words(id)
 );
 
 
