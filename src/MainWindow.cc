@@ -9,6 +9,15 @@
 
 
 
+MainWindow::MainWindow()
+{
+  initializeBuilder();
+  initializeWidgets();
+  show_all_children();
+}
+
+
+
 void MainWindow::on_selection_changed(Glib::RefPtr<Gtk::TreeSelection> selection)
 {
   Gtk::TreeModel::iterator iter = selection->get_selected();
@@ -41,12 +50,13 @@ void MainWindow::on_selection_changed(Glib::RefPtr<Gtk::TreeSelection> selection
 
 
 
-MainWindow::MainWindow()
+void MainWindow::initializeBuilder()
 {
-  auto builder = Gtk::Builder::create();
+  _builder = Gtk::Builder::create();
+
   try
   {
-    builder->add_from_file("ui_main.xml");
+    _builder->add_from_file("ui_main.xml");
   }
   catch (const Glib::FileError& e)
   {
@@ -64,13 +74,19 @@ MainWindow::MainWindow()
     throw e;
   }
 
+}
+
+
+
+void MainWindow::initializeWidgets()
+{
   Gtk::Box *box = nullptr;
-  builder->get_widget("box", box);
+  _builder->get_widget("box", box);
   add(*box);
 
   DbTableColumnsWords tableColumnsWords;
   Gtk::TreeView* vocabularyList = nullptr;
-  builder->get_widget("vocabularyList", vocabularyList);
+  _builder->get_widget("vocabularyList", vocabularyList);
   Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
   vocabularyList->set_model(treeModel);
   vocabularyList->set_headers_visible(false);
@@ -87,7 +103,7 @@ MainWindow::MainWindow()
 
   DbTableGrammarRules tableGrammarRules;
   Gtk::TreeView* grammarRulesTitles = nullptr;
-  builder->get_widget("grammarRulesTitles", grammarRulesTitles);
+  _builder->get_widget("grammarRulesTitles", grammarRulesTitles);
   Glib::RefPtr<Gtk::ListStore> treeModelGrammar = Gtk::ListStore::create(tableGrammarRules);
   grammarRulesTitles->set_model(treeModelGrammar);
   grammarRulesTitles->set_headers_visible(false);
@@ -102,7 +118,7 @@ MainWindow::MainWindow()
 
 
   Gtk::TreeView* grammarRulesContent = nullptr;
-  builder->get_widget("grammarRulesContent", grammarRulesContent);
+  _builder->get_widget("grammarRulesContent", grammarRulesContent);
   Glib::RefPtr<Gtk::ListStore> treeModelGrammarContent = Gtk::ListStore::create(tableGrammarRules);
   grammarRulesContent->set_model(treeModelGrammarContent);
   grammarRulesContent->set_headers_visible(false);
@@ -120,12 +136,10 @@ MainWindow::MainWindow()
   Glib::RefPtr<Gtk::ListStore> m_refTreeModel = Gtk::ListStore::create(dbViewNames);
 
   Gtk::TreeView* grammarExamplesView;
-  builder->get_widget("grammarExamples", grammarExamplesView);
+  _builder->get_widget("grammarExamples", grammarExamplesView);
   grammarExamplesView->set_model(m_refTreeModel);
   grammarExamplesView->set_headers_visible(false);
 
   DB::getGrammarExamples(1, (void*) m_refTreeModel.get());
   grammarExamplesView->append_column("name", dbViewNames.name);
-
-  show_all_children();
 }

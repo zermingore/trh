@@ -11,7 +11,15 @@ public:
   MainWindow();
   virtual ~MainWindow() = default;
 
+
+private:
   void on_selection_changed(Glib::RefPtr<Gtk::TreeSelection> selection);
+
+  void initializeBuilder();
+  void initializeWidgets();
+
+
+  Glib::RefPtr<Gtk::Builder> _builder;
 };
 
 
