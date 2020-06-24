@@ -57,6 +57,15 @@ void DB::getTranslations(int word_src_id,
 
 
 
+void DB::getGrammarRulesTitles(void *first)
+{
+  const std::string request =
+    "SELECT * FROM grammar_rules ORDER BY title ASC";
+  rawRequest(request.c_str(), fetchGrammarRulesTitles, first);
+}
+
+
+
 void DB::rawRequest(const std::string request,
                     int (*cb) (void*, int, char**, char**),
                     void *first)
@@ -102,6 +111,20 @@ int DB::fetchTranslations(void *model, int argc, char **argv, char **azColName)
   DbTableColumnsTranslations tableCol;
   row[tableCol.id_word_src] = std::stoi(argv[0]);
   row[tableCol.id_word_dst] = std::stoi(argv[1]);
+
+  return 0;
+}
+
+
+
+int DB::fetchGrammarRulesTitles(void *model, int argc, char** argv, char **azColName)
+{
+  Gtk::ListStore *treeModel = (Gtk::ListStore *) model;
+  Gtk::TreeModel::Row row = *(treeModel->append());
+  DbTableGrammarRules tableCol;
+  row[tableCol.id] = std::stoi(argv[0]);
+  row[tableCol.title] = argv[1];
+  row[tableCol.content] = argv[2];
 
   return 0;
 }

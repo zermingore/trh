@@ -83,5 +83,23 @@ MainWindow::MainWindow()
 
   vocabularyList->append_column("Name", tableColumnsWords.name);
 
+
+
+  DbTableGrammarRules tableGrammarRules;
+  Gtk::TreeView* grammarList = nullptr;
+  builder->get_widget("grammarList", grammarList);
+  Glib::RefPtr<Gtk::ListStore> treeModelGrammar = Gtk::ListStore::create(tableGrammarRules);
+  grammarList->set_model(treeModelGrammar);
+  grammarList->set_headers_visible(false);
+
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammar = grammarList->get_selection();
+  refTreeSelectionGrammar->signal_changed().connect(
+    sigc::bind(sigc::mem_fun(*this, &MainWindow::on_selection_changed), refTreeSelectionGrammar));
+
+  DB::getGrammarRulesTitles((void*) treeModelGrammar.get());
+
+  grammarList->append_column("content", tableGrammarRules.title);
+
+
   show_all_children();
 }

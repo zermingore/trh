@@ -37,6 +37,13 @@ public:
   static void getWord(int word_id, void *first);
 
   /**
+   * @brief Get the grammar titles
+   * @param first first result
+   * @warning throws
+   */
+  static void getGrammarRulesTitles(void *first);
+
+  /**
    * @brief Get the translations of the give word
    * @param cb Callback function
    * @param first first result
@@ -65,6 +72,8 @@ public:
   static int dbFetchWords(void *model, int argc, char **argv, char **azColName);
 
   static int fetchTranslations(void *model, int argc, char **argv, char **azColName);
+
+  static int fetchGrammarRulesTitles(void *model, int argc, char** argv, char **azColName);
 
 
 

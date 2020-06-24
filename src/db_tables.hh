@@ -36,4 +36,20 @@ public:
 };
 
 
+
+class DbTableGrammarRules: public Gtk::TreeModel::ColumnRecord
+{
+public:
+  DbTableGrammarRules() {
+    add(id);
+    add(title);
+    add(content);
+  }
+
+  Gtk::TreeModelColumn<unsigned int> id;
+  Gtk::TreeModelColumn<Glib::ustring> title;
+  Gtk::TreeModelColumn<Glib::ustring> content;
+};
+
+
 #endif /* !DB_TABLES_HH_ */
