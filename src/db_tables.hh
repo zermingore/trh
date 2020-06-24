@@ -52,4 +52,18 @@ public:
 };
 
 
+
+class DbTableGrammarExamples: public Gtk::TreeModel::ColumnRecord
+{
+public:
+  DbTableGrammarExamples() {
+    add(id_rule);
+    add(id_word);
+  }
+
+  Gtk::TreeModelColumn<unsigned int> id_rule;
+  Gtk::TreeModelColumn<unsigned int> id_word;
+};
+
+
 #endif /* !DB_TABLES_HH_ */

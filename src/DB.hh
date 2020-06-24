@@ -54,6 +54,14 @@ public:
                               void *first);
 
   /**
+   * @brief Get the examples of the given grammar rule
+   * @param grammar_rule_id Grammar rule id (in DB grammar_rules table)
+   * @param first first result
+   * @warning throws
+   */
+  static void getGrammarExamples(int grammar_rule_id, void *first);
+
+  /**
    * @brief Wrapper around sqlite3_exec
    * @param request Raw SQL request string
    * @param cb Callback function
@@ -69,15 +77,18 @@ public:
   static void close();
 
 
-  static int dbFetchWords(void *model, int argc, char **argv, char **azColName);
-
   static int fetchTranslations(void *model, int argc, char **argv, char **azColName);
-
-  static int fetchGrammarRulesTitles(void *model, int argc, char** argv, char **azColName);
-
 
 
 private:
+  static int dbFetchWords(void *model, int argc, char **argv, char **azColName);
+
+  static int fetchGrammarRulesTitles(void *model, int argc, char** argv, char **azColName);
+
+  static int fetchGrammarExamples(void *model, int argc, char** argv, char **azColName);
+
+
+
   static sqlite3 *_db; ///< Database
 };
 

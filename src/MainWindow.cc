@@ -116,5 +116,21 @@ MainWindow::MainWindow()
 
 
 
+  DbTableGrammarExamples dbGrammarExamplesColumns;
+  Glib::RefPtr<Gtk::ListStore> m_refTreeModel = Gtk::ListStore::create(dbGrammarExamplesColumns);
+
+  Gtk::TreeView* grammarExamplesView;
+  builder->get_widget("grammarExamples", grammarExamplesView);
+  grammarExamplesView->set_model(m_refTreeModel);
+
+  Gtk::TreeModel::Row row = *(m_refTreeModel->append());
+  row[dbGrammarExamplesColumns.id_rule] = 1;
+  row[dbGrammarExamplesColumns.id_word] = 2;
+
+  grammarExamplesView->append_column("ID", dbGrammarExamplesColumns.id_rule);
+  grammarExamplesView->append_column("Name", dbGrammarExamplesColumns.id_word);
+  grammarExamplesView->set_headers_visible(false);
+
+
   show_all_children();
 }
