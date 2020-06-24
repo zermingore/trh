@@ -47,17 +47,24 @@
         </child>
 
         <child>
-          <object class="GtkScrolledWindow" id="grammarView">
+          <object class="GtkBox" id="boxGrammar">
+            <property name="orientation">vertical</property>
             <property name="visible">True</property>
-            <property name="hscrollbar_policy">automatic</property>
-            <property name="vscrollbar_policy">automatic</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <child>
-              <object class="GtkTreeView" id="grammarList">
+              <object class="GtkTreeView" id="grammarRulesTitle">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <!-- <property name="model">list</property> -->
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparator"/>
+            </child>
+            <child>
+              <object class="GtkTreeView" id="grammarRulesContent">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
               </object>
             </child>
           </object>
@@ -65,12 +72,8 @@
             <property name="title" translatable="yes">Grammar</property>
           </packing>
         </child>
-
-      </object>
+        </object>>
     </child>
 
   </object>
-  <!--   </child> -->
-
-  <!-- </object> -->
 </interface>

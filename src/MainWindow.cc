@@ -86,20 +86,33 @@ MainWindow::MainWindow()
 
 
   DbTableGrammarRules tableGrammarRules;
-  Gtk::TreeView* grammarList = nullptr;
-  builder->get_widget("grammarList", grammarList);
+  Gtk::TreeView* grammarRulesTitle = nullptr;
+  builder->get_widget("grammarRulesTitle", grammarRulesTitle);
   Glib::RefPtr<Gtk::ListStore> treeModelGrammar = Gtk::ListStore::create(tableGrammarRules);
-  grammarList->set_model(treeModelGrammar);
-  grammarList->set_headers_visible(false);
+  grammarRulesTitle->set_model(treeModelGrammar);
+  grammarRulesTitle->set_headers_visible(false);
 
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammar = grammarList->get_selection();
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammar = grammarRulesTitle->get_selection();
   refTreeSelectionGrammar->signal_changed().connect(
     sigc::bind(sigc::mem_fun(*this, &MainWindow::on_selection_changed), refTreeSelectionGrammar));
 
   DB::getGrammarRulesTitles((void*) treeModelGrammar.get());
+  grammarRulesTitle->append_column("title", tableGrammarRules.title);
 
-  grammarList->append_column("content", tableGrammarRules.title);
 
+
+  Gtk::TreeView* grammarRulesContent = nullptr;
+  builder->get_widget("grammarRulesContent", grammarRulesContent);
+  Glib::RefPtr<Gtk::ListStore> treeModelGrammar2 = Gtk::ListStore::create(tableGrammarRules);
+  grammarRulesContent->set_model(treeModelGrammar2);
+  grammarRulesContent->set_headers_visible(false);
+
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammar2 = grammarRulesContent->get_selection();
+  refTreeSelectionGrammar2->signal_changed().connect(
+    sigc::bind(sigc::mem_fun(*this, &MainWindow::on_selection_changed), refTreeSelectionGrammar2));
+
+  DB::getGrammarRulesTitles((void*) treeModelGrammar2.get());
+  grammarRulesContent->append_column("content", tableGrammarRules.content);
 
   show_all_children();
 }
