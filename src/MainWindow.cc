@@ -122,6 +122,7 @@ void MainWindow::initializeWidgets()
   Glib::RefPtr<Gtk::ListStore> treeModelGrammarContent = Gtk::ListStore::create(tableGrammarRules);
   grammarRulesContent->set_model(treeModelGrammarContent);
   grammarRulesContent->set_headers_visible(false);
+  grammarRulesContent->get_selection()->set_mode(Gtk::SELECTION_NONE);
 
   Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammarContent = grammarRulesContent->get_selection();
   refTreeSelectionGrammarContent->signal_changed().connect(
@@ -137,8 +138,10 @@ void MainWindow::initializeWidgets()
 
   Gtk::TreeView* grammarExamplesView;
   _builder->get_widget("grammarExamples", grammarExamplesView);
+
   grammarExamplesView->set_model(m_refTreeModel);
   grammarExamplesView->set_headers_visible(false);
+  grammarExamplesView->get_selection()->set_mode(Gtk::SELECTION_NONE);
 
   DB::getGrammarExamples(1, (void*) m_refTreeModel.get());
   grammarExamplesView->append_column("name", dbViewNames.name);
