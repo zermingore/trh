@@ -69,34 +69,10 @@ void DB::getGrammarRulesTitles(void *first)
 void DB::getGrammarExamples(int grammar_rule_id, void *first)
 {
   const std::string request =
-    "SELECT * FROM grammar_examples";
-  rawRequest(request.c_str(), fetchGrammarRulesTitles, first);
+    "SELECT name FROM words WHERE id in (SELECT id_word FROM grammar_examples WHERE id_rule="
+    + std::to_string(grammar_rule_id) + ")";
 
-
-  sqlite3_stmt *stmt;
-  if (sqlite3_prepare_v2(_db, request.c_str(), -1, &stmt, NULL) != SQLITE_OK)
-  {
-    std::cerr << "[DB] Failure preparing [" << request << "]:\n\t"
-              << sqlite3_errmsg(_db) << '\n';
-    sqlite3_close(_db);
-    throw std::runtime_error("[DB] Failure executing [" + request + "]:\n");
-  }
-
-  int rc = SQLITE_OK;
-  while ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
-  {
-    std::cout << "stmt: word: " << sqlite3_column_text(stmt, 3) << std::endl;
-  }
-  if (rc != SQLITE_DONE) {
-    std::cerr << "Failure stepping through [" << request << "]:\n\t"
-              << sqlite3_errmsg(_db) << '\n';
-  }
-
-  if (sqlite3_finalize(stmt) != SQLITE_OK)
-  {
-    std::cerr << "Failure finalizing [" << request << "]:\n\t"
-              << sqlite3_errmsg(_db) << '\n';
-  }
+  rawRequest(request.c_str(), fetchGrammarExamples, first);
 }
 
 
@@ -170,9 +146,8 @@ int DB::fetchGrammarExamples(void *model, int argc, char** argv, char **azColNam
 {
   Gtk::ListStore *treeModel = (Gtk::ListStore *) model;
   Gtk::TreeModel::Row row = *(treeModel->append());
-  DbTableGrammarExamples tableCol;
-  row[tableCol.id_rule] = std::stoi(argv[0]);
-  row[tableCol.id_word] = std::stoi(argv[1]);
+  DbViewGrammarExampleNames names;
+  row[names.name] = argv[0];
 
   return 0;
 }

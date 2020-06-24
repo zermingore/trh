@@ -66,4 +66,16 @@ public:
 };
 
 
+
+class DbViewGrammarExampleNames: public Gtk::TreeModel::ColumnRecord
+{
+public:
+  DbViewGrammarExampleNames() {
+    add(name);
+  }
+
+  Gtk::TreeModelColumn<Glib::ustring> name;
+};
+
+
 #endif /* !DB_TABLES_HH_ */
