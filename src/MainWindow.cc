@@ -86,33 +86,35 @@ MainWindow::MainWindow()
 
 
   DbTableGrammarRules tableGrammarRules;
-  Gtk::TreeView* grammarRulesTitle = nullptr;
-  builder->get_widget("grammarRulesTitle", grammarRulesTitle);
+  Gtk::TreeView* grammarRulesTitles = nullptr;
+  builder->get_widget("grammarRulesTitles", grammarRulesTitles);
   Glib::RefPtr<Gtk::ListStore> treeModelGrammar = Gtk::ListStore::create(tableGrammarRules);
-  grammarRulesTitle->set_model(treeModelGrammar);
-  grammarRulesTitle->set_headers_visible(false);
+  grammarRulesTitles->set_model(treeModelGrammar);
+  grammarRulesTitles->set_headers_visible(false);
 
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammar = grammarRulesTitle->get_selection();
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammar = grammarRulesTitles->get_selection();
   refTreeSelectionGrammar->signal_changed().connect(
     sigc::bind(sigc::mem_fun(*this, &MainWindow::on_selection_changed), refTreeSelectionGrammar));
 
   DB::getGrammarRulesTitles((void*) treeModelGrammar.get());
-  grammarRulesTitle->append_column("title", tableGrammarRules.title);
+  grammarRulesTitles->append_column("title", tableGrammarRules.title);
 
 
 
   Gtk::TreeView* grammarRulesContent = nullptr;
   builder->get_widget("grammarRulesContent", grammarRulesContent);
-  Glib::RefPtr<Gtk::ListStore> treeModelGrammar2 = Gtk::ListStore::create(tableGrammarRules);
-  grammarRulesContent->set_model(treeModelGrammar2);
+  Glib::RefPtr<Gtk::ListStore> treeModelGrammarContent = Gtk::ListStore::create(tableGrammarRules);
+  grammarRulesContent->set_model(treeModelGrammarContent);
   grammarRulesContent->set_headers_visible(false);
 
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammar2 = grammarRulesContent->get_selection();
-  refTreeSelectionGrammar2->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &MainWindow::on_selection_changed), refTreeSelectionGrammar2));
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammarContent = grammarRulesContent->get_selection();
+  refTreeSelectionGrammarContent->signal_changed().connect(
+    sigc::bind(sigc::mem_fun(*this, &MainWindow::on_selection_changed), refTreeSelectionGrammarContent));
 
-  DB::getGrammarRulesTitles((void*) treeModelGrammar2.get());
+  DB::getGrammarRulesTitles((void*) treeModelGrammarContent.get());
   grammarRulesContent->append_column("content", tableGrammarRules.content);
+
+
 
   show_all_children();
 }
