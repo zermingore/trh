@@ -66,10 +66,18 @@ CREATE TABLE grammar_rules(
 CREATE TABLE grammar_examples(
   id INTEGER PRIMARY KEY,
   id_rule INTEGER NOT NULL,
+  id_word INTEGER NOT NULL,
 
   FOREIGN KEY(id_rule) REFERENCES grammar_rules(id)
+  FOREIGN KEY(id_word) REFERENCES words(id)
 );
 
+
+
+CREATE TABLE CONSTANTS(
+  name TEXT PRIMARY KEY,
+  value INTEGER NOT NULL
+);
 
 
 .read default_values.sql
