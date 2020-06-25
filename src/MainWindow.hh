@@ -13,7 +13,8 @@ public:
 
 
 private:
-  void on_selection_changed(Glib::RefPtr<Gtk::TreeSelection> selection);
+  void cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection);
+  void cbOnSearch();
 
   void initializeBuilder();
   void initializeWidgets();

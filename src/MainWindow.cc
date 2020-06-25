@@ -18,7 +18,7 @@ MainWindow::MainWindow()
 
 
 
-void MainWindow::on_selection_changed(Glib::RefPtr<Gtk::TreeSelection> selection)
+void MainWindow::cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection)
 {
   Gtk::TreeModel::iterator iter = selection->get_selected();
   if (iter)
@@ -50,6 +50,13 @@ void MainWindow::on_selection_changed(Glib::RefPtr<Gtk::TreeSelection> selection
 
 
 
+void MainWindow::cbOnSearch()
+{
+  std::cout << "search clicked" << std::endl;
+}
+
+
+
 void MainWindow::initializeBuilder()
 {
   _builder = Gtk::Builder::create();
@@ -73,7 +80,6 @@ void MainWindow::initializeBuilder()
     std::cerr << "GtkBuilder BuilderError: " << e.what() << '\n';
     throw e;
   }
-
 }
 
 
@@ -93,7 +99,7 @@ void MainWindow::initializeWidgets()
 
   Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
   refTreeSelection->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &MainWindow::on_selection_changed), refTreeSelection));
+    sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelection));
 
   DB::getWordsLanguageSorted(2, (void*) treeModel.get());
 
@@ -110,7 +116,7 @@ void MainWindow::initializeWidgets()
 
   Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammar = grammarRulesTitles->get_selection();
   refTreeSelectionGrammar->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &MainWindow::on_selection_changed), refTreeSelectionGrammar));
+    sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelectionGrammar));
 
   DB::getGrammarRulesTitles((void*) treeModelGrammar.get());
   grammarRulesTitles->append_column("title", tableGrammarRules.title);
@@ -126,7 +132,7 @@ void MainWindow::initializeWidgets()
 
   Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammarContent = grammarRulesContent->get_selection();
   refTreeSelectionGrammarContent->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &MainWindow::on_selection_changed), refTreeSelectionGrammarContent));
+    sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelectionGrammarContent));
 
   DB::getGrammarRulesTitles((void*) treeModelGrammarContent.get());
   grammarRulesContent->append_column("content", tableGrammarRules.content);
@@ -145,4 +151,18 @@ void MainWindow::initializeWidgets()
 
   DB::getGrammarExamples(1, (void*) m_refTreeModel.get());
   grammarExamplesView->append_column("name", dbViewNames.name);
+
+
+  Gtk::Button* searchButton;
+  _builder->get_widget("search", searchButton);
+  searchButton->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::cbOnSearch));
+
+
+  Gtk::TreeView* list;
+  _builder->get_widget("vocabularyList", list);
+  auto row = Gtk::make_managed<Gtk::Button>("word");
+
+
+  row->show();
+  list->add(*row);
 }

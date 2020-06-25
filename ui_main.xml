@@ -13,6 +13,35 @@
             <property name="stack">stack</property>
           </object>
         </child>
+
+        <child>
+          <object class="GtkMenuButton" id="options">
+            <property name="visible">True</property>
+            <property name="direction">none</property>
+            <property name="use-popover">True</property>
+            <style>
+              <class name="image-button"/>
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="search">
+            <property name="visible">True</property>
+            <!-- <property name="sensitive">False</property> -->
+            <style>
+              <class name="image-button"/>
+            </style>
+            <child>
+              <object class="GtkImage" id="search-icon">
+                <property name="visible">True</property>
+                <property name="icon-name">edit-find-symbolic</property>
+                <property name="icon-size">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
       </object>
     </child>
 
