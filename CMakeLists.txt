@@ -28,4 +28,4 @@ set(HDR src/DB.hh src/db_tables.hh src/MainWindow.hh lib/sqlite3.h)
 
 add_executable(trh ${SRC} ${HDR})
 
-target_link_libraries(trh Threads::Threads ${GTK3_LIBRARIES} ${GTKMM_LIBRARIES})
+target_link_libraries(trh dl Threads::Threads ${GTK3_LIBRARIES} ${GTKMM_LIBRARIES})
