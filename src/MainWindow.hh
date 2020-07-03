@@ -22,6 +22,9 @@ private:
 
 
   Glib::RefPtr<Gtk::Builder> _builder;
+
+  bool _addWordDisplayed = false;
+  Gtk::Widget *_boxAddWord;
 };
 
 

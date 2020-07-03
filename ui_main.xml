@@ -64,6 +64,21 @@
     </child> <!-- Header Bar -->
 
     <child>
+      <object class="GtkBox" id="boxAddWord">
+        <property name="orientation">vertical</property>
+        <property name="visible">False</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
+        <child>
+          <object class="GtkTreeView" id="addWordView">
+            <property name="visible">False</property>
+            <property name="can_focus">False</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
       <object class="GtkStack" id="stack">
         <property name="visible">True</property>
         <property name="transition-type">crossfade</property>

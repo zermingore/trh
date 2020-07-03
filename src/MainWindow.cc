@@ -14,6 +14,8 @@ MainWindow::MainWindow()
   initializeBuilder();
   initializeWidgets();
   show_all_children();
+
+  _boxAddWord->hide();
 }
 
 
@@ -59,7 +61,15 @@ void MainWindow::cbOnSearch()
 
 void MainWindow::cbOnAdd()
 {
-  DB::addWord("___LOL___", 2, 1);
+  _addWordDisplayed = !_addWordDisplayed;
+  if (_addWordDisplayed)
+  {
+    _boxAddWord->show();
+    return;
+  }
+  _boxAddWord->hide();
+
+//  DB::addWord("___LOL___", 2, 1);
 
   DbTableColumnsWords tableColumnsWords;
 
@@ -110,6 +120,8 @@ void MainWindow::initializeWidgets()
   Gtk::Box *box = nullptr;
   _builder->get_widget("box", box);
   add(*box);
+
+  _builder->get_widget("boxAddWord", _boxAddWord);
 
   DbTableColumnsWords tableColumnsWords;
   Gtk::TreeView* vocabularyList = nullptr;
