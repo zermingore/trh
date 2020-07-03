@@ -20,6 +20,23 @@ MainWindow::MainWindow()
 
 
 
+void MainWindow::initializeAddWord()
+{
+  Gtk::ButtonBox *bbox = nullptr;
+  _builder->get_widget("addWordButtonBox", bbox);
+
+  Gtk::RadioButton::Group group;
+
+  std::vector<std::string> categories = { "unknown", "test", "hard-coded" }; /// \todo DB
+  for (const auto &category: categories)
+  {
+    auto buttonTest = Gtk::make_managed<Gtk::RadioButton>(group, category);
+    _boxAddWord->pack_start(*buttonTest);
+  }
+}
+
+
+
 void MainWindow::cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection)
 {
   Gtk::TreeModel::iterator iter = selection->get_selected();
@@ -73,7 +90,7 @@ void MainWindow::cbOnAdd()
 
   DbTableColumnsWords tableColumnsWords;
 
-  // Refresh the wocabulary list
+  // Refresh the vocabulary list
   Gtk::TreeView* vocabularyList = nullptr;
   _builder->get_widget("vocabularyList", vocabularyList);
   Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
@@ -201,4 +218,7 @@ void MainWindow::initializeWidgets()
 
   row->show();
   list->add(*row);
+
+
+  initializeAddWord();
 }

@@ -68,14 +68,38 @@
         <property name="orientation">vertical</property>
         <property name="visible">False</property>
         <property name="hexpand">True</property>
-        <property name="vexpand">True</property>
+        <property name="vexpand">False</property>
+
         <child>
-          <object class="GtkTreeView" id="addWordView">
-            <property name="visible">False</property>
-            <property name="can_focus">False</property>
+          <object class="GtkEntry" id="addWordName">
+            <property name="visible">True</property>
+            <property name="hexpand">False</property>
+            <property name="vexpand">False</property>
           </object>
         </child>
-      </object>
+
+        <child>
+          <object class="GtkButtonBox" id="addWordButtonBox">
+            <property name="visible">True</property>
+            <property name="hexpand">False</property>
+            <property name="vexpand">False</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="confirmAddWordButton">
+            <property name="visible">True</property>
+            <property name="hexpand">False</property>
+            <property name="vexpand">False</property>
+            <property name="label">Confirm</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkSeparator"/>
+        </child>
+
+      </object> <!-- Box AddWord -->
     </child>
 
     <child>

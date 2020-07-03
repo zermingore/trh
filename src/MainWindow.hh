@@ -20,11 +20,13 @@ private:
   void initializeBuilder();
   void initializeWidgets();
 
+  void initializeAddWord();
+
 
   Glib::RefPtr<Gtk::Builder> _builder;
 
   bool _addWordDisplayed = false;
-  Gtk::Widget *_boxAddWord;
+  Gtk::Box *_boxAddWord;
 };
 
 
