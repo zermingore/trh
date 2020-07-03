@@ -22,16 +22,27 @@ MainWindow::MainWindow()
 
 void MainWindow::initializeAddWord()
 {
-  Gtk::ButtonBox *bbox = nullptr;
-  _builder->get_widget("addWordButtonBox", bbox);
+  Gtk::ButtonBox *boxCategories = nullptr;
+  _builder->get_widget("addWordButtonBoxCategory", boxCategories);
 
-  Gtk::RadioButton::Group group;
-
+  Gtk::RadioButton::Group groupCategories;
   std::vector<std::string> categories = { "unknown", "test", "hard-coded" }; /// \todo DB
   for (const auto &category: categories)
   {
-    auto buttonTest = Gtk::make_managed<Gtk::RadioButton>(group, category);
-    _boxAddWord->pack_start(*buttonTest);
+    auto buttonTest = Gtk::make_managed<Gtk::RadioButton> (groupCategories, category);
+    boxCategories->pack_start(*buttonTest);
+  }
+
+
+  Gtk::ButtonBox *boxLanguages = nullptr;
+  _builder->get_widget("addWordButtonBoxLanguages", boxLanguages);
+
+  Gtk::RadioButton::Group groupLanguages;
+  std::vector<std::string> languages = { "EN", "DE", "FR" }; /// \todo DB
+  for (const auto &language: languages)
+  {
+    auto buttonTest = Gtk::make_managed<Gtk::RadioButton> (groupLanguages, language);
+    boxLanguages->pack_end(*buttonTest);
   }
 }
 
