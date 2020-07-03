@@ -29,6 +29,45 @@ void DB::initialize(const std::string file_name)
 
 
 
+bool DB::addWord(const std::string& name, int language, int category)
+{
+  std::cout << "adding word" << std::endl;
+  std::string request = "INSERT INTO words(id_language, id_category, name) VALUES("
+    + std::to_string(language) + ", "
+    + std::to_string(category) + ", "
+    + "'" + name + "');"; /// \todo Handle escape quoting
+
+  sqlite3_stmt *stmt;
+  if (sqlite3_prepare_v2(_db, request.c_str(), -1, &stmt, NULL) != SQLITE_OK)
+  {
+    std::cerr << "[DB] Failure preparing request [" << request << "]\n\t"
+              << sqlite3_errmsg(_db) << '\n';
+    sqlite3_close(_db);
+    return false;
+  }
+
+  sqlite3_step(stmt);
+  if (sqlite3_step(stmt) != SQLITE_DONE)
+  {
+    std::cerr << "[DB] Failure step; request [" << request << "]\n\t"
+              << sqlite3_errmsg(_db) << '\n';
+    sqlite3_close(_db);
+    return false;
+  }
+
+  if (sqlite3_finalize(stmt) != SQLITE_OK)
+  {
+    std::cerr << "[DB] Failure finalizing request [" << request << "]\n\t"
+              << sqlite3_errmsg(_db) << '\n';
+    sqlite3_close(_db);
+    return false;
+  }
+
+  return true;
+}
+
+
+
 void DB::getWordsLanguageSorted(int language_id, void *first)
 {
   const std::string request =

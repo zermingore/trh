@@ -59,7 +59,21 @@ void MainWindow::cbOnSearch()
 
 void MainWindow::cbOnAdd()
 {
-  std::cout << "add clicked" << std::endl;
+  DB::addWord("___LOL___", 2, 1);
+
+  DbTableColumnsWords tableColumnsWords;
+
+  // Refresh the wocabulary list
+  Gtk::TreeView* vocabularyList = nullptr;
+  _builder->get_widget("vocabularyList", vocabularyList);
+  Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
+  vocabularyList->set_model(treeModel);
+
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
+  refTreeSelection->signal_changed().connect(
+    sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelection));
+
+  DB::getWordsLanguageSorted(2, (void*) treeModel.get());
 }
 
 

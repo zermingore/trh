@@ -21,6 +21,15 @@ public:
   static void initialize(const std::string file_name);
 
   /**
+   * @brief Add a word in the Words table
+   * @param name Word text
+   * @param language Valid foreign key to a 'languages' table entry
+   * @param category Valid foreign key to a 'categories' table entry
+   * @return true on success; false otherwise (ex: invalid language / category)
+   */
+  static bool addWord(const std::string& name, int language, int category);
+
+  /**
    * @brief Get every words, sorted alphabetically
    * @param language_id language to retrieve the words from
    * @param first first result
