@@ -22,6 +22,11 @@ MainWindow::MainWindow()
 
 void MainWindow::initializeAddWord()
 {
+  Gtk::Button* confirmAddWord;
+  _builder->get_widget("confirmAddWordButton", confirmAddWord);
+  confirmAddWord->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::cbOnConfirmAddWord));
+
+
   Gtk::ButtonBox *boxCategories = nullptr;
   _builder->get_widget("addWordButtonBoxCategory", boxCategories);
 
@@ -44,6 +49,31 @@ void MainWindow::initializeAddWord()
     auto buttonTest = Gtk::make_managed<Gtk::RadioButton> (groupLanguages, language);
     boxLanguages->pack_end(*buttonTest);
   }
+}
+
+
+
+void MainWindow::cbOnConfirmAddWord()
+{
+  Gtk::Entry *entryName = nullptr;
+  _builder->get_widget("addWordName", entryName);
+
+
+  DB::addWord(entryName->get_text(), 2, 1);
+
+  DbTableColumnsWords tableColumnsWords;
+
+  // Refresh the vocabulary list
+  Gtk::TreeView* vocabularyList = nullptr;
+  _builder->get_widget("vocabularyList", vocabularyList);
+  Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
+  vocabularyList->set_model(treeModel);
+
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
+  refTreeSelection->signal_changed().connect(
+    sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelection));
+
+  DB::getWordsLanguageSorted(2, (void*) treeModel.get());
 }
 
 
@@ -96,22 +126,6 @@ void MainWindow::cbOnAdd()
     return;
   }
   _boxAddWord->hide();
-
-//  DB::addWord("___LOL___", 2, 1);
-
-  DbTableColumnsWords tableColumnsWords;
-
-  // Refresh the vocabulary list
-  Gtk::TreeView* vocabularyList = nullptr;
-  _builder->get_widget("vocabularyList", vocabularyList);
-  Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
-  vocabularyList->set_model(treeModel);
-
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
-  refTreeSelection->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelection));
-
-  DB::getWordsLanguageSorted(2, (void*) treeModel.get());
 }
 
 

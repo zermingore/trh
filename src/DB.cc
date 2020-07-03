@@ -46,7 +46,6 @@ bool DB::addWord(const std::string& name, int language, int category)
     return false;
   }
 
-  sqlite3_step(stmt);
   if (sqlite3_step(stmt) != SQLITE_DONE)
   {
     std::cerr << "[DB] Failure step; request [" << request << "]\n\t"

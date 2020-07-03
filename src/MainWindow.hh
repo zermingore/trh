@@ -16,10 +16,11 @@ private:
   void cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection);
   void cbOnSearch();
   void cbOnAdd();
+  void cbOnConfirmAddWord();
+
 
   void initializeBuilder();
   void initializeWidgets();
-
   void initializeAddWord();
 
 
