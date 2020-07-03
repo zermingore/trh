@@ -57,6 +57,13 @@ void MainWindow::cbOnSearch()
 
 
 
+void MainWindow::cbOnAdd()
+{
+  std::cout << "add clicked" << std::endl;
+}
+
+
+
 void MainWindow::initializeBuilder()
 {
   _builder = Gtk::Builder::create();
@@ -104,7 +111,6 @@ void MainWindow::initializeWidgets()
   DB::getWordsLanguageSorted(2, (void*) treeModel.get());
 
   vocabularyList->append_column("Name", tableColumnsWords.name);
-
 
 
   DbTableGrammarRules tableGrammarRules;
@@ -156,6 +162,10 @@ void MainWindow::initializeWidgets()
   Gtk::Button* searchButton;
   _builder->get_widget("search", searchButton);
   searchButton->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::cbOnSearch));
+
+  Gtk::Button* addButton;
+  _builder->get_widget("add", addButton);
+  addButton->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::cbOnAdd));
 
 
   Gtk::TreeView* list;

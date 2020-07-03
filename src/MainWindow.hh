@@ -15,6 +15,7 @@ public:
 private:
   void cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection);
   void cbOnSearch();
+  void cbOnAdd();
 
   void initializeBuilder();
   void initializeWidgets();
