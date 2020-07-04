@@ -31,22 +31,27 @@ void MainWindow::initializeAddWord()
 
   Gtk::RadioButton::Group groupCategories;
   std::vector<std::string> categories = DB::getTableEntries("categories");
+  int i = 0;
   for (const auto &category: categories)
   {
-    auto buttonTest = Gtk::make_managed<Gtk::RadioButton> (groupCategories, category);
-    boxCategories->pack_start(*buttonTest);
+    auto button = Gtk::make_managed<Gtk::RadioButton> (groupCategories, category);
+    boxCategories->pack_start(*button);
+    button->signal_clicked().connect([=] () { _addWordSelectedCategory = i; });
+    ++i;
   }
-
 
   Gtk::ButtonBox *boxLanguages = nullptr;
   _builder->get_widget("addWordButtonBoxLanguages", boxLanguages);
 
   Gtk::RadioButton::Group groupLanguages;
   std::vector<std::string> languages = DB::getTableEntries("languages");
+  i = 0;
   for (const auto &language: languages)
   {
-    auto buttonTest = Gtk::make_managed<Gtk::RadioButton> (groupLanguages, language);
-    boxLanguages->pack_end(*buttonTest);
+    auto button = Gtk::make_managed<Gtk::RadioButton> (groupLanguages, language);
+    boxLanguages->pack_end(*button);
+    button->signal_clicked().connect([=] () { _addWordSelectedLanguage = i; });
+    ++i;
   }
 }
 
@@ -56,8 +61,7 @@ void MainWindow::cbOnConfirmAddWord()
 {
   Gtk::Entry *entryName = nullptr;
   _builder->get_widget("addWordName", entryName);
-
-  DB::addWord(entryName->get_text(), 2, 1);
+  DB::addWord(entryName->get_text(), _addWordSelectedLanguage, _addWordSelectedCategory);
 
   DbTableColumnsWords tableColumnsWords;
 

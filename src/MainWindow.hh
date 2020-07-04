@@ -28,6 +28,8 @@ private:
 
   bool _addWordDisplayed = false;
   Gtk::Box *_boxAddWord;
+  int _addWordSelectedCategory = 0;
+  int _addWordSelectedLanguage = 0;
 };
 
 
