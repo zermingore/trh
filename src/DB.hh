@@ -2,6 +2,7 @@
 # define DB_HH_
 
 # include <string>
+# include <vector>
 
 struct sqlite3;
 
@@ -19,6 +20,16 @@ public:
    * @warning throws
    */
   static void initialize(const std::string file_name);
+
+  /**
+   * @brief Get the full content of the given table
+   * @param table Concerned table name
+   * @param first First result
+   * @return Table second column content as strings
+   * @warning The table must have 2 columns minimum
+   * @warning throws
+   */
+  static std::vector<std::string> getTableEntries(const std::string &table);
 
   /**
    * @brief Add a word in the Words table
@@ -89,13 +100,12 @@ public:
   static int fetchTranslations(void *model, int argc, char **argv, char **azColName);
 
 
+
 private:
   static int dbFetchWords(void *model, int argc, char **argv, char **azColName);
 
   static int fetchGrammarRulesTitles(void *model, int argc, char** argv, char **azColName);
-
   static int fetchGrammarExamples(void *model, int argc, char** argv, char **azColName);
-
 
 
   static sqlite3 *_db; ///< Database

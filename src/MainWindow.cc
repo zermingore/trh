@@ -26,12 +26,11 @@ void MainWindow::initializeAddWord()
   _builder->get_widget("confirmAddWordButton", confirmAddWord);
   confirmAddWord->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::cbOnConfirmAddWord));
 
-
   Gtk::ButtonBox *boxCategories = nullptr;
   _builder->get_widget("addWordButtonBoxCategory", boxCategories);
 
   Gtk::RadioButton::Group groupCategories;
-  std::vector<std::string> categories = { "unknown", "test", "hard-coded" }; /// \todo DB
+  std::vector<std::string> categories = DB::getTableEntries("categories");
   for (const auto &category: categories)
   {
     auto buttonTest = Gtk::make_managed<Gtk::RadioButton> (groupCategories, category);
@@ -43,7 +42,7 @@ void MainWindow::initializeAddWord()
   _builder->get_widget("addWordButtonBoxLanguages", boxLanguages);
 
   Gtk::RadioButton::Group groupLanguages;
-  std::vector<std::string> languages = { "EN", "DE", "FR" }; /// \todo DB
+  std::vector<std::string> languages = DB::getTableEntries("languages");
   for (const auto &language: languages)
   {
     auto buttonTest = Gtk::make_managed<Gtk::RadioButton> (groupLanguages, language);
@@ -57,7 +56,6 @@ void MainWindow::cbOnConfirmAddWord()
 {
   Gtk::Entry *entryName = nullptr;
   _builder->get_widget("addWordName", entryName);
-
 
   DB::addWord(entryName->get_text(), 2, 1);
 

@@ -29,6 +29,38 @@ void DB::initialize(const std::string file_name)
 
 
 
+std::vector<std::string> DB::getTableEntries(const std::string &table)
+{
+  std::vector<std::string> results;
+  std::string request = "SELECT * FROM " + table;
+
+  sqlite3_stmt *stmt;
+  if (sqlite3_prepare_v2(_db, request.c_str(), -1, &stmt, NULL) != SQLITE_OK)
+  {
+    std::cerr << "[DB] Failure preparing request [" << request << "]\n\t"
+              << sqlite3_errmsg(_db) << '\n';
+    sqlite3_close(_db);
+    throw std::runtime_error("[DB] Failure executing [" + request + "]:\n");
+  }
+
+  while (sqlite3_step(stmt) == SQLITE_ROW)
+  {
+    results.push_back((char*) sqlite3_column_text(stmt, 1));
+  }
+
+  if (sqlite3_finalize(stmt) != SQLITE_OK)
+  {
+    std::cerr << "[DB] Failure finalizing request [" << request << "]\n\t"
+              << sqlite3_errmsg(_db) << '\n';
+    sqlite3_close(_db);
+    throw std::runtime_error("[DB] Failure executing [" + request + "]:\n");
+  }
+
+  return results;
+}
+
+
+
 bool DB::addWord(const std::string& name, int language, int category)
 {
   std::cout << "adding word" << std::endl;
