@@ -31,7 +31,7 @@ void MainWindow::initializeAddWord()
 
   Gtk::RadioButton::Group groupCategories;
   std::vector<std::string> categories = DB::getTableEntries("categories");
-  int i = 0;
+  int i = 1; // DB index starts at 1
   for (const auto &category: categories)
   {
     auto button = Gtk::make_managed<Gtk::RadioButton> (groupCategories, category);
@@ -45,7 +45,7 @@ void MainWindow::initializeAddWord()
 
   Gtk::RadioButton::Group groupLanguages;
   std::vector<std::string> languages = DB::getTableEntries("languages");
-  i = 0;
+  i = 1; // DB index starts at 1
   for (const auto &language: languages)
   {
     auto button = Gtk::make_managed<Gtk::RadioButton> (groupLanguages, language);
