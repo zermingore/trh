@@ -18,8 +18,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpthread -ldl")
 
 include_directories("${PROJECT_SOURCE_DIR}/")
 include_directories("${PROJECT_SOURCE_DIR}/src/")
-include_directories("${GTK3_INCLUDE_DIRS}")
-include_directories("${GTKMM_INCLUDE_DIRS}")
+include_directories(SYSTEM "${GTK3_INCLUDE_DIRS}")
+include_directories(SYSTEM "${GTKMM_INCLUDE_DIRS}")
 
 link_directories("${GTKMM_LIBRARY_DIRS}")
 

@@ -1,4 +1,5 @@
 db/custom/
 
 build/
+cross_build
 trh
