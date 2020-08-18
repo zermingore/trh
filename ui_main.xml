@@ -60,6 +60,24 @@
           </object>
         </child>
 
+        <child>
+          <object class="GtkButton" id="edit">
+            <property name="visible">True</property>
+            <!-- <property name="sensitive">False</property> -->
+            <style>
+              <class name="image-button"/>
+            </style>
+
+            <child>
+              <object class="GtkImage" id="edit-icon">
+                <property name="visible">True</property>
+                <property name="icon-name">preferences-desktop</property>
+                <property name="icon-size">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
       </object>
     </child> <!-- Header Bar -->
 

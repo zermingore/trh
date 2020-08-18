@@ -119,6 +119,13 @@ void MainWindow::cbOnSearch()
 
 
 
+void MainWindow::cbEditWord()
+{
+  std::cout << "cbEditWord\n";
+}
+
+
+
 void MainWindow::cbOnAdd()
 {
   _addWordDisplayed = !_addWordDisplayed;
@@ -236,6 +243,10 @@ void MainWindow::initializeWidgets()
   Gtk::Button* addButton;
   _builder->get_widget("add", addButton);
   addButton->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::cbOnAdd));
+
+  Gtk::Button* editButton;
+  _builder->get_widget("edit", editButton);
+  editButton->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::cbEditWord));
 
 
   Gtk::TreeView* list;
