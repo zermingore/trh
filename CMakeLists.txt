@@ -23,8 +23,8 @@ include_directories(SYSTEM "${GTKMM_INCLUDE_DIRS}")
 
 link_directories("${GTKMM_LIBRARY_DIRS}")
 
-set(SRC src/main.cc src/DB.cc src/MainWindow.cc lib/sqlite3.c)
-set(HDR src/DB.hh src/db_tables.hh src/MainWindow.hh lib/sqlite3.h)
+set(SRC src/main.cc src/DB.cc src/MainWindow.cc src/Vocabulary.cc lib/sqlite3.c)
+set(HDR src/DB.hh src/db_tables.hh src/MainWindow.hh src/Vocabulary.hh lib/sqlite3.h)
 
 add_executable(trh ${SRC} ${HDR})
 

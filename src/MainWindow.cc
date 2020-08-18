@@ -6,6 +6,7 @@
 #include <MainWindow.hh>
 #include <DB.hh>
 #include <db_tables.hh>
+#include <Vocabulary.hh>
 
 
 
@@ -14,127 +15,6 @@ MainWindow::MainWindow()
   initializeBuilder();
   initializeWidgets();
   show_all_children();
-
-  _boxAddWord->hide();
-}
-
-
-
-void MainWindow::initializeAddWord()
-{
-  Gtk::Button* confirmAddWord;
-  _builder->get_widget("confirmAddWordButton", confirmAddWord);
-  confirmAddWord->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::cbOnConfirmAddWord));
-
-  Gtk::ButtonBox *boxCategories = nullptr;
-  _builder->get_widget("addWordButtonBoxCategory", boxCategories);
-
-  Gtk::RadioButton::Group groupCategories;
-  std::vector<std::string> categories = DB::getTableEntries("categories");
-  int i = 1; // DB index starts at 1
-  for (const auto &category: categories)
-  {
-    auto button = Gtk::make_managed<Gtk::RadioButton> (groupCategories, category);
-    boxCategories->pack_start(*button);
-    button->signal_clicked().connect([=] () { _addWordSelectedCategory = i; });
-    ++i;
-  }
-
-  Gtk::ButtonBox *boxLanguages = nullptr;
-  _builder->get_widget("addWordButtonBoxLanguages", boxLanguages);
-
-  Gtk::RadioButton::Group groupLanguages;
-  std::vector<std::string> languages = DB::getTableEntries("languages");
-  i = 1; // DB index starts at 1
-  for (const auto &language: languages)
-  {
-    auto button = Gtk::make_managed<Gtk::RadioButton> (groupLanguages, language);
-    boxLanguages->pack_end(*button);
-    button->signal_clicked().connect([=] () { _addWordSelectedLanguage = i; });
-    ++i;
-  }
-}
-
-
-
-void MainWindow::cbOnConfirmAddWord()
-{
-  Gtk::Entry *entryName = nullptr;
-  _builder->get_widget("addWordName", entryName);
-  DB::addWord(entryName->get_text(), _addWordSelectedLanguage, _addWordSelectedCategory);
-
-  DbTableColumnsWords tableColumnsWords;
-
-  // Refresh the vocabulary list
-  Gtk::TreeView* vocabularyList = nullptr;
-  _builder->get_widget("vocabularyList", vocabularyList);
-  Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
-  vocabularyList->set_model(treeModel);
-
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
-  refTreeSelection->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelection));
-
-  DB::getWordsLanguageSorted(2, (void*) treeModel.get());
-}
-
-
-
-void MainWindow::cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection)
-{
-  Gtk::TreeModel::iterator iter = selection->get_selected();
-  if (iter)
-  {
-    Gtk::TreeModel::Row row = *iter;
-    DbTableColumnsWords tableCol;
-
-    DbTableColumnsTranslations tableTranslation;
-    Glib::RefPtr<Gtk::ListStore> store = Gtk::ListStore::create(tableTranslation);
-    DB::getTranslations(row[tableCol.id], DB::fetchTranslations, (void *) store.get());
-
-    for (auto& child: store->children())
-    {
-      Gtk::TreeModel::Row row_translations = child;
-      DbTableColumnsWords word;
-      Glib::RefPtr<Gtk::ListStore> list_words = Gtk::ListStore::create(word);
-      DB::getWord(row_translations[tableTranslation.id_word_dst], (void*) list_words.get());
-
-      Gtk::TreeModel::Row row_word = child;
-      for (auto c: list_words->children())
-      {
-        Gtk::TreeModel::Row row_word = c;
-        Glib::ustring tmp = row_word[word.name];
-        row[tableCol.name] = tmp;
-      }
-    }
-  }
-}
-
-
-
-void MainWindow::cbOnSearch()
-{
-  std::cout << "search clicked" << std::endl;
-}
-
-
-
-void MainWindow::cbEditWord()
-{
-  std::cout << "cbEditWord\n";
-}
-
-
-
-void MainWindow::cbOnAdd()
-{
-  _addWordDisplayed = !_addWordDisplayed;
-  if (_addWordDisplayed)
-  {
-    _boxAddWord->show();
-    return;
-  }
-  _boxAddWord->hide();
 }
 
 
@@ -150,17 +30,17 @@ void MainWindow::initializeBuilder()
   catch (const Glib::FileError& e)
   {
     std::cerr << "GtkBuilder FileError: " << e.what() << '\n';
-    throw e;
+    throw;
   }
   catch (const Glib::MarkupError& e)
   {
     std::cerr << "GtkBuilder MarkupError: " << e.what() << '\n';
-    throw e;
+    throw;
   }
   catch (const Gtk::BuilderError& e)
   {
     std::cerr << "GtkBuilder BuilderError: " << e.what() << '\n';
-    throw e;
+    throw;
   }
 }
 
@@ -172,23 +52,6 @@ void MainWindow::initializeWidgets()
   _builder->get_widget("box", box);
   add(*box);
 
-  _builder->get_widget("boxAddWord", _boxAddWord);
-
-  DbTableColumnsWords tableColumnsWords;
-  Gtk::TreeView* vocabularyList = nullptr;
-  _builder->get_widget("vocabularyList", vocabularyList);
-  Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
-  vocabularyList->set_model(treeModel);
-  vocabularyList->set_headers_visible(false);
-
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
-  refTreeSelection->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelection));
-
-  DB::getWordsLanguageSorted(2, (void*) treeModel.get());
-
-  vocabularyList->append_column("Name", tableColumnsWords.name);
-
 
   DbTableGrammarRules tableGrammarRules;
   Gtk::TreeView* grammarRulesTitles = nullptr;
@@ -197,9 +60,9 @@ void MainWindow::initializeWidgets()
   grammarRulesTitles->set_model(treeModelGrammar);
   grammarRulesTitles->set_headers_visible(false);
 
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammar = grammarRulesTitles->get_selection();
-  refTreeSelectionGrammar->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelectionGrammar));
+  // Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammar = grammarRulesTitles->get_selection();
+  // refTreeSelectionGrammar->signal_changed().connect(
+  //   sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelectionGrammar));
 
   DB::getGrammarRulesTitles((void*) treeModelGrammar.get());
   grammarRulesTitles->append_column("title", tableGrammarRules.title);
@@ -213,9 +76,9 @@ void MainWindow::initializeWidgets()
   grammarRulesContent->set_headers_visible(false);
   grammarRulesContent->get_selection()->set_mode(Gtk::SELECTION_NONE);
 
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammarContent = grammarRulesContent->get_selection();
-  refTreeSelectionGrammarContent->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelectionGrammarContent));
+  // Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammarContent = grammarRulesContent->get_selection();
+  // refTreeSelectionGrammarContent->signal_changed().connect(
+  //   sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelectionGrammarContent));
 
   DB::getGrammarRulesTitles((void*) treeModelGrammarContent.get());
   grammarRulesContent->append_column("content", tableGrammarRules.content);
@@ -236,27 +99,6 @@ void MainWindow::initializeWidgets()
   grammarExamplesView->append_column("name", dbViewNames.name);
 
 
-  Gtk::Button* searchButton;
-  _builder->get_widget("search", searchButton);
-  searchButton->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::cbOnSearch));
 
-  Gtk::Button* addButton;
-  _builder->get_widget("add", addButton);
-  addButton->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::cbOnAdd));
-
-  Gtk::Button* editButton;
-  _builder->get_widget("edit", editButton);
-  editButton->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::cbEditWord));
-
-
-  Gtk::TreeView* list;
-  _builder->get_widget("vocabularyList", list);
-  auto row = Gtk::make_managed<Gtk::Button>("word");
-
-
-  row->show();
-  list->add(*row);
-
-
-  initializeAddWord();
+  _vocabulary = std::make_unique<Vocabulary> (_builder);
 }
