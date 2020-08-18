@@ -5,6 +5,7 @@
 # include <gtkmm.h>
 
 class Vocabulary;
+class Grammar;
 
 
 
@@ -23,6 +24,7 @@ private:
 
   Glib::RefPtr<Gtk::Builder> _builder;
   std::unique_ptr<Vocabulary> _vocabulary;
+  std::unique_ptr<Grammar> _grammar;
 };
 
 

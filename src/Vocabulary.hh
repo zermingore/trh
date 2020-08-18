@@ -28,7 +28,7 @@ private:
   void cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection);
 
 
-  Glib::RefPtr<Gtk::Builder> _builder;
+  const Glib::RefPtr<Gtk::Builder> _builder;
 
   std::vector<Gtk::RadioButton*> _buttonsCategories; ///< Radio buttons list
 
