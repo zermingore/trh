@@ -111,8 +111,7 @@ void Vocabulary::cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection
 
       for (auto c: list_words->children())
       {
-        Gtk::TreeModel::Row row_word = c;
-        Glib::ustring tmp = row_word[word.name];
+        row[tableCol.name] = static_cast<Glib::ustring> (c[word.name]);
       }
     }
   }
