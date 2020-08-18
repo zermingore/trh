@@ -3,7 +3,6 @@
 
 # include <memory>
 # include <gtkmm.h>
-# include <Vocabulary.hh>
 
 class Vocabulary;
 
@@ -13,7 +12,7 @@ class MainWindow: public Gtk::Window
 {
 public:
   MainWindow();
-  virtual ~MainWindow() = default;
+  virtual ~MainWindow();
 
 
 private:
