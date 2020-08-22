@@ -92,6 +92,10 @@ Vocabulary::Vocabulary(Glib::RefPtr<Gtk::Builder> builder)
 
 void Vocabulary::cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection)
 {
+  _addWordDisplayed = false;
+  _editMode = false;
+  _boxAddWord->hide();
+
   Gtk::TreeModel::iterator iter = selection->get_selected();
   if (iter)
   {
@@ -101,6 +105,7 @@ void Vocabulary::cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection
     DbTableColumnsTranslations tableTranslation;
     Glib::RefPtr<Gtk::ListStore> store = Gtk::ListStore::create(tableTranslation);
     DB::getTranslations(row[tableCol.id], DB::fetchTranslations, (void *) store.get());
+    _selectedWordIndex = row[tableCol.id];
 
     for (auto& child: store->children())
     {
@@ -121,6 +126,11 @@ void Vocabulary::cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection
 
 void Vocabulary::cbOnConfirmAddWord()
 {
+  if (_editMode)
+  {
+    return;
+  }
+
   Gtk::Entry *entryName = nullptr;
   _builder->get_widget("addWordName", entryName);
   DB::addWord(entryName->get_text(), _addWordSelectedLanguage, _addWordSelectedCategory);
@@ -151,31 +161,33 @@ void Vocabulary::cbOnSearch()
 
 void Vocabulary::cbEditWord()
 {
+  std::cout << "--- cbEditWord ---\n";
+
   _addWordDisplayed = !_addWordDisplayed;
-  //  _boxAddWord->addWordButtonBoxCategory()->set("test");
-  // _addWordSelectedLanguage = 2;
   if (!_addWordDisplayed)
   {
     _boxAddWord->hide();
     return;
   }
 
+  DbTableColumnsWords word;
+  Glib::RefPtr<Gtk::ListStore> list_words = Gtk::ListStore::create(word);
+  DB::getWord(_selectedWordIndex, (void*) list_words.get());
+
+  std::cout << "Checking children of " << _selectedWordIndex << '\n';
+  for (auto c: list_words->children())
+  {
+    // auto name = static_cast<Glib::ustring> (c[word.name]);
+    std::cout << "id: " << c[word.id] << '\n';
+    std::cout << "name: " << c[word.name] << '\n';
+    std::cout << "language: " << c[word.language] << '\n';
+    std::cout << "category: " << c[word.category] << '\n';
+  }
+
   Gtk::RadioButton::Group groupCategories;
-  // std::vector<std::string> categories = DB::getTableEntries("categories");
 
   auto button = Gtk::make_managed<Gtk::RadioButton> (groupCategories, "adverb");
-  //boxCategories->pack_start(*button);
   button->set_active(true);
-
-
-  // int i = 1; // DB index starts at 1
-  // for (const auto &category: categories)
-  // {
-  //   auto button = Gtk::make_managed<Gtk::RadioButton> (groupCategories, category);
-  //   boxCategories->pack_start(*button);
-  //   button->signal_clicked().connect([=] () { _addWordSelectedCategory = i; });
-  //   ++i;
-  // }
 
   _boxAddWord->show();
 }

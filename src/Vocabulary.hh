@@ -36,10 +36,12 @@ private:
   const std::vector<std::string> _languages;
 
 
+  bool _editMode = false;
   bool _addWordDisplayed = false;
   Gtk::Box *_boxAddWord;
   int _addWordSelectedCategory = 0;
   int _addWordSelectedLanguage = 0;
+  int _selectedWordIndex = 1;
 };
 
 
