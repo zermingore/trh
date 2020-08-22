@@ -61,6 +61,45 @@ std::vector<std::string> DB::getTableEntries(const std::string &table)
 
 
 
+bool DB::editWord(int id, const std::string& name, int language, int category)
+{
+  std::cout << "editing word\n";
+  std::string request =
+      "UPDATE words SET id_language=" + std::to_string(language) + ", "
+    + "id_category=" + std::to_string(category) + ", "
+    + "name=" + name
+    + " WHERE id=" + std::to_string(id) + ";";
+
+  sqlite3_stmt *stmt;
+  if (sqlite3_prepare_v2(_db, request.c_str(), -1, &stmt, NULL) != SQLITE_OK)
+  {
+    std::cerr << "[DB] Failure preparing request [" << request << "]\n\t"
+              << sqlite3_errmsg(_db) << '\n';
+    sqlite3_close(_db);
+    return false;
+  }
+
+  if (sqlite3_step(stmt) != SQLITE_DONE)
+  {
+    std::cerr << "[DB] Failure step; request [" << request << "]\n\t"
+              << sqlite3_errmsg(_db) << '\n';
+    sqlite3_close(_db);
+    return false;
+  }
+
+  if (sqlite3_finalize(stmt) != SQLITE_OK)
+  {
+    std::cerr << "[DB] Failure finalizing request [" << request << "]\n\t"
+              << sqlite3_errmsg(_db) << '\n';
+    sqlite3_close(_db);
+    return false;
+  }
+
+  return true;
+}
+
+
+
 bool DB::addWord(const std::string& name, int language, int category)
 {
   std::cout << "adding word" << std::endl;

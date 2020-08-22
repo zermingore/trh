@@ -32,6 +32,16 @@ public:
   static std::vector<std::string> getTableEntries(const std::string &table);
 
   /**
+   * @brief Edit the given word
+   * @param id Id of the word to edit
+   * @param name Word text
+   * @param language Valid foreign key to a 'languages' table entry
+   * @param category Valid foreign key to a 'categories' table entry
+   * @return true on success; false otherwise (ex: invalid language / category)
+   */
+  static bool editWord(int id, const std::string& name, int language, int category);
+
+  /**
    * @brief Add a word in the Words table
    * @param name Word text
    * @param language Valid foreign key to a 'languages' table entry
