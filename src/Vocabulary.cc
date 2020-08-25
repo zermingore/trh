@@ -86,6 +86,8 @@ Vocabulary::Vocabulary(Glib::RefPtr<Gtk::Builder> builder)
     auto button = Gtk::make_managed<Gtk::RadioButton> (groupLanguages, language);
     boxLanguages->pack_end(*button);
     button->signal_clicked().connect([=] () { _selectedWord.language = i; });
+    _buttonsLanguages.emplace_back(button);
+
     ++i;
   }
 
@@ -201,6 +203,16 @@ void Vocabulary::cbEditWord()
     _selectedWord.language = static_cast<int> (c[dbWord.language]);
   }
 
+  if (_selectedWord.category <= 0 || _selectedWord.language <= 0)
+  {
+    std::cerr << "Unable to locate word\n"
+              << "id:       " << _selectedWord.id << "\n"
+              << "category: " << _selectedWord.category << "\n"
+              << "language: " << _selectedWord.language << "\n"
+              << "name:     " << _selectedWord.name << "\n\n";
+    return;
+  }
+
   std::cout << "activating...\n"
             << "id:       " << _selectedWord.id << "\n"
             << "category: " << _selectedWord.category << "\n"
@@ -213,13 +225,10 @@ void Vocabulary::cbEditWord()
 
   Gtk::ButtonBox *boxCategories = nullptr;
   _builder->get_widget("addWordButtonBoxCategory", boxCategories);
-  for (auto b: _buttonsCategories)
-  {
-    b->set_active(false);
-  }
 
   // -1: db index Vs vector index
   _buttonsCategories[_selectedWord.category - 1]->set_active(true);
+  _buttonsLanguages[_selectedWord.language - 1]->set_active(true);
 
   _boxAddWord->show();
 }

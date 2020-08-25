@@ -40,6 +40,7 @@ private:
   const Glib::RefPtr<Gtk::Builder> _builder;
 
   std::vector<Gtk::RadioButton*> _buttonsCategories; ///< Radio buttons list
+  std::vector<Gtk::RadioButton*> _buttonsLanguages; ///< Radio buttons list
 
   const std::vector<std::string> _categories;
   const std::vector<std::string> _languages;
