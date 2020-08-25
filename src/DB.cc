@@ -67,7 +67,7 @@ bool DB::editWord(int id, const std::string& name, int language, int category)
   std::string request =
       "UPDATE words SET id_language=" + std::to_string(language) + ", "
     + "id_category=" + std::to_string(category) + ", "
-    + "name=" + name
+    + "name='" + name + "'"
     + " WHERE id=" + std::to_string(id) + ";";
 
   sqlite3_stmt *stmt;

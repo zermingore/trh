@@ -234,6 +234,7 @@ void Vocabulary::cbEditWord()
   _buttonsCategories[_selectedWord.category - 1]->set_active(true);
   _buttonsLanguages[_selectedWord.language - 1]->set_active(true);
 
+  _editMode = true;
   _boxAddWord->show();
 }
 
