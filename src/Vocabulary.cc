@@ -178,6 +178,11 @@ void Vocabulary::cbEditWord()
 {
   std::cout << "\n--- cbEditWord... ";
 
+  // Reset selected word (with error values)
+  _selectedWord.category = 0;
+  _selectedWord.language = 0;
+  _selectedWord.name = "";
+
   _addWordDisplayed = !_addWordDisplayed;
   if (!_addWordDisplayed)
   {
@@ -187,9 +192,6 @@ void Vocabulary::cbEditWord()
   }
   std::cout << "ON\n";
 
-  // _selectedWord.category = 1;
-  // _selectedWord.language = 1;
-  // _selectedWord.name = "__ERROR__";
 
   DbTableColumnsWords dbWord;
   Glib::RefPtr<Gtk::ListStore> list_words = Gtk::ListStore::create(dbWord);
@@ -203,7 +205,9 @@ void Vocabulary::cbEditWord()
     _selectedWord.language = static_cast<int> (c[dbWord.language]);
   }
 
-  if (_selectedWord.category <= 0 || _selectedWord.language <= 0)
+  if (   _selectedWord.name == ""
+      || _selectedWord.category <= 0
+      || _selectedWord.language <= 0)
   {
     std::cerr << "Unable to locate word\n"
               << "id:       " << _selectedWord.id << "\n"
@@ -238,6 +242,14 @@ void Vocabulary::cbEditWord()
 void Vocabulary::cbOnAdd()
 {
   _addWordDisplayed = !_addWordDisplayed;
+
+  // Reset selection
+  _buttonsCategories[0]->set_active(true);
+  _buttonsLanguages[0]->set_active(true);
+  Gtk::Entry *entryName = nullptr;
+  _builder->get_widget("addWordName", entryName);
+  entryName->set_text("");
+
   if (_addWordDisplayed)
   {
     _boxAddWord->show();
