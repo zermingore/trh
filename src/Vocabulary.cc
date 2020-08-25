@@ -68,7 +68,11 @@ Vocabulary::Vocabulary(Glib::RefPtr<Gtk::Builder> builder)
   {
     auto button = Gtk::make_managed<Gtk::RadioButton> (groupCategories, category);
     boxCategories->pack_start(*button);
-    button->signal_clicked().connect([=] () { _addWordSelectedCategory = i; });
+    button->signal_clicked().connect([=] () {
+      _selectedWord.category = i;
+    });
+    _buttonsCategories.emplace_back(button);
+
     ++i;
   }
 
@@ -81,10 +85,12 @@ Vocabulary::Vocabulary(Glib::RefPtr<Gtk::Builder> builder)
   {
     auto button = Gtk::make_managed<Gtk::RadioButton> (groupLanguages, language);
     boxLanguages->pack_end(*button);
-    button->signal_clicked().connect([=] () { _addWordSelectedLanguage = i; });
+    button->signal_clicked().connect([=] () { _selectedWord.language = i; });
     ++i;
   }
 
+  _addWordDisplayed = false;
+  _editMode = false;
   _boxAddWord->hide();
 }
 
@@ -105,7 +111,7 @@ void Vocabulary::cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection
     DbTableColumnsTranslations tableTranslation;
     Glib::RefPtr<Gtk::ListStore> store = Gtk::ListStore::create(tableTranslation);
     DB::getTranslations(row[tableCol.id], DB::fetchTranslations, (void *) store.get());
-    _selectedWordIndex = row[tableCol.id];
+    _selectedWord.id = row[tableCol.id];
 
     for (auto& child: store->children())
     {
@@ -126,18 +132,25 @@ void Vocabulary::cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection
 
 void Vocabulary::cbOnConfirmAddWord()
 {
-  if (_editMode)
-  {
-    return;
-  }
-
   Gtk::Entry *entryName = nullptr;
   _builder->get_widget("addWordName", entryName);
-  DB::addWord(entryName->get_text(), _addWordSelectedLanguage, _addWordSelectedCategory);
 
-  DbTableColumnsWords tableColumnsWords;
+  if (_editMode)
+  {
+    std::cout << "id: " << _selectedWord.id << '\n';
+    std::cout << "name: " << _selectedWord.name << '\n';
+    std::cout << "language: " << _selectedWord.language << '\n';
+    std::cout << "category: " << _selectedWord.category << '\n';
+
+    DB::editWord(_selectedWord.id, entryName->get_text(), _selectedWord.language, _selectedWord.category);
+  }
+  else
+  {
+    DB::addWord(entryName->get_text(), _selectedWord.language, _selectedWord.category);
+  }
 
   // Refresh the vocabulary list
+  DbTableColumnsWords tableColumnsWords;
   Gtk::TreeView* vocabularyList = nullptr;
   _builder->get_widget("vocabularyList", vocabularyList);
   Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
@@ -161,33 +174,52 @@ void Vocabulary::cbOnSearch()
 
 void Vocabulary::cbEditWord()
 {
-  std::cout << "--- cbEditWord ---\n";
+  std::cout << "\n--- cbEditWord... ";
 
   _addWordDisplayed = !_addWordDisplayed;
   if (!_addWordDisplayed)
   {
+    std::cout << "OFF\n";
     _boxAddWord->hide();
     return;
   }
+  std::cout << "ON\n";
 
-  DbTableColumnsWords word;
-  Glib::RefPtr<Gtk::ListStore> list_words = Gtk::ListStore::create(word);
-  DB::getWord(_selectedWordIndex, (void*) list_words.get());
+  // _selectedWord.category = 1;
+  // _selectedWord.language = 1;
+  // _selectedWord.name = "__ERROR__";
 
-  std::cout << "Checking children of " << _selectedWordIndex << '\n';
+  DbTableColumnsWords dbWord;
+  Glib::RefPtr<Gtk::ListStore> list_words = Gtk::ListStore::create(dbWord);
+  DB::getWord(_selectedWord.id, (void*) list_words.get());
+
+
   for (auto c: list_words->children())
   {
-    // auto name = static_cast<Glib::ustring> (c[word.name]);
-    std::cout << "id: " << c[word.id] << '\n';
-    std::cout << "name: " << c[word.name] << '\n';
-    std::cout << "language: " << c[word.language] << '\n';
-    std::cout << "category: " << c[word.category] << '\n';
+    _selectedWord.name = static_cast<Glib::ustring> (c[dbWord.name]);
+    _selectedWord.category = static_cast<int> (c[dbWord.category]);
+    _selectedWord.language = static_cast<int> (c[dbWord.language]);
   }
 
-  Gtk::RadioButton::Group groupCategories;
+  std::cout << "activating...\n"
+            << "id:       " << _selectedWord.id << "\n"
+            << "category: " << _selectedWord.category << "\n"
+            << "language: " << _selectedWord.language << "\n"
+            << "name:     " << _selectedWord.name << "\n\n";
 
-  auto button = Gtk::make_managed<Gtk::RadioButton> (groupCategories, "adverb");
-  button->set_active(true);
+  Gtk::Entry *entryName = nullptr;
+  _builder->get_widget("addWordName", entryName);
+  entryName->set_text(_selectedWord.name);
+
+  Gtk::ButtonBox *boxCategories = nullptr;
+  _builder->get_widget("addWordButtonBoxCategory", boxCategories);
+  for (auto b: _buttonsCategories)
+  {
+    b->set_active(false);
+  }
+
+  // -1: db index Vs vector index
+  _buttonsCategories[_selectedWord.category - 1]->set_active(true);
 
   _boxAddWord->show();
 }

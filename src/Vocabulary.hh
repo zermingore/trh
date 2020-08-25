@@ -14,6 +14,15 @@ namespace Gtk
 }
 
 
+struct Word
+{
+  unsigned int id;
+  short language;
+  short category;
+  Glib::ustring name;
+};
+
+
 class Vocabulary
 {
 public:
@@ -39,9 +48,7 @@ private:
   bool _editMode = false;
   bool _addWordDisplayed = false;
   Gtk::Box *_boxAddWord;
-  int _addWordSelectedCategory = 0;
-  int _addWordSelectedLanguage = 0;
-  int _selectedWordIndex = 1;
+  Word _selectedWord;
 };
 
 
