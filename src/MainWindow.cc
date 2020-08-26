@@ -15,7 +15,12 @@ MainWindow::MainWindow()
 {
   initializeBuilder();
   initializeWidgets();
+
+  // Display all widgets but AddWord
   show_all_children();
+  Gtk::Box *boxAddWord = nullptr;
+  _builder->get_widget("boxAddWord", boxAddWord);
+  boxAddWord->hide();
 }
 
 

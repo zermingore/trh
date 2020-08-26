@@ -190,6 +190,7 @@ void Vocabulary::cbEditWord()
     _boxAddWord->hide();
     return;
   }
+  _boxAddWord->show();
   std::cout << "ON\n";
 
 
