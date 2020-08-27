@@ -67,8 +67,9 @@ bool DB::editWord(int id, const std::string& name, int language, int category)
   std::string request =
       "UPDATE words SET id_language=" + std::to_string(language) + ", "
     + "id_category=" + std::to_string(category) + ", "
-    + "name='" + name + "'"
-    + " WHERE id=" + std::to_string(id) + ";";
+    + "name='" + name + "', "
+    + "date=CURRENT_TIMESTAMP"
+    + " WHERE id=" + std::to_string(id) + ";"; /// \todo Handle escape quoting
 
   sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(_db, request.c_str(), -1, &stmt, NULL) != SQLITE_OK)
@@ -103,10 +104,12 @@ bool DB::editWord(int id, const std::string& name, int language, int category)
 bool DB::addWord(const std::string& name, int language, int category)
 {
   std::cout << "adding word" << std::endl;
-  std::string request = "INSERT INTO words(id_language, id_category, name) VALUES("
+  std::string request = "INSERT INTO words(id_language, id_category, name, date) VALUES("
     + std::to_string(language) + ", "
     + std::to_string(category) + ", "
-    + "'" + name + "');"; /// \todo Handle escape quoting
+    + "'" + name + "', "
+    + "CURRENT_TIMESTAMP"
+    + ");"; /// \todo Handle escape quoting
 
   sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(_db, request.c_str(), -1, &stmt, NULL) != SQLITE_OK)

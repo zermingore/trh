@@ -47,6 +47,7 @@ CREATE TABLE words(
   id_category INTEGER NOT NULL,
 
   name TEXT,
+  date TEXT,
 
   FOREIGN KEY(id_category) REFERENCES categories(id)
   FOREIGN KEY(id_language) REFERENCES languages(id)
