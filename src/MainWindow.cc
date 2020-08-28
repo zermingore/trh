@@ -5,6 +5,7 @@
 
 #include <MainWindow.hh>
 #include <DB.hh>
+#include <Log.hh>
 #include <db_tables.hh>
 #include <Vocabulary.hh>
 #include <Grammar.hh>
@@ -14,6 +15,7 @@
 MainWindow::MainWindow()
 {
   initializeBuilder();
+  Log::init(_builder);
   initializeWidgets();
 
   // Display all widgets but AddWord

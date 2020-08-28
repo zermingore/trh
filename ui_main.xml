@@ -205,5 +205,11 @@
       </object>
     </child>
 
+    <child>
+      <object class="GtkTextView" id="console">
+        <property name="visible">True</property>
+      </object>
+    </child>
+
   </object>
 </interface>
