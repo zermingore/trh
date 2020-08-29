@@ -6,13 +6,43 @@
 # include "Log.hh"
 
 
+
+# ifdef __unix__
+#   define COLOR_NORMAL  "\x1B[0m"
+#   define COLOR_RED     "\x1B[31m"
+#   define COLOR_GREEN   "\x1B[32m"
+#   define COLOR_YELLOW  "\x1B[33m"
+#   define COLOR_BLUE    "\x1B[34m"
+#   define COLOR_MAGENTA "\x1B[35m"
+#   define COLOR_CYAN    "\x1B[36m"
+#   define COLOR_WHITE   "\x1B[37m"
+# else
+#   define COLOR_NORMAL  ""
+#   define COLOR_RED     ""
+#   define COLOR_GREEN   ""
+#   define COLOR_YELLOW  ""
+#   define COLOR_BLUE    ""
+#   define COLOR_MAGENTA ""
+#   define COLOR_CYAN    ""
+#   define COLOR_WHITE   ""
+# endif
+
+/// \def Messages specific colors
+# define COLOR_ERROR   COLOR_RED
+# define COLOR_WARNING COLOR_YELLOW
+# define COLOR_SUCCESS COLOR_GREEN
+# define COLOR_VERBOSE COLOR_BLUE
+# define COLOR_NOTICE  COLOR_CYAN
+
+
+
 template<typename T>
 using EnableIfStr = std::enable_if_t<std::is_constructible_v<const char*, T>>;
 
 
 
 template<typename... Tail>
-void constexpr Log::print(const char head, const Tail... tail)
+void Log::print(const char head, const Tail... tail)
 {
   std::cout << head;
 
@@ -23,16 +53,16 @@ void constexpr Log::print(const char head, const Tail... tail)
 }
 
 template<typename... Tail>
-void constexpr Log::print(const char* head, const Tail... tail)
+void Log::print(const char* head, const Tail... tail)
 {
   std::cout << head;
 
   _bufIter = _buffer->insert(_bufIter, head);
-  prin_bufItert(tail...);
+  print(tail...);
 }
 
 template<typename... Tail>
-void constexpr Log::print(const std::string& head, const Tail... tail)
+void Log::print(const std::string& head, const Tail... tail)
 {
   std::cout << head;
 
@@ -41,7 +71,7 @@ void constexpr Log::print(const std::string& head, const Tail... tail)
 }
 
 template<typename T, typename... Tail, typename = EnableIfStr<T>>
-void constexpr Log::print(const T head, const Tail... tail)
+void Log::print(const T head, const Tail... tail)
 {
   std::cout << head;
 
@@ -50,7 +80,7 @@ void constexpr Log::print(const T head, const Tail... tail)
 }
 
 template<typename T, typename... Tail>
-void constexpr Log::print(const T head, const Tail... tail)
+void Log::print(const T head, const Tail... tail)
 {
   std::cout << head;
 
@@ -61,9 +91,9 @@ void constexpr Log::print(const T head, const Tail... tail)
 
 
 template<typename... Tail>
-void constexpr Log::notice(const char head, const Tail... tail)
+void Log::notice(const char head, const Tail... tail)
 {
-  std::cout << head;
+  std::cout << COLOR_NOTICE << head;
 
   std::string str;
   str.assign(1, head);
@@ -72,36 +102,36 @@ void constexpr Log::notice(const char head, const Tail... tail)
 }
 
 template<typename... Tail>
-void constexpr Log::notice(const char* head, const Tail... tail)
+void Log::notice(const char* head, const Tail... tail)
 {
-  std::cout << head;
+  std::cout << COLOR_NOTICE << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, head, _noticeTag);
   notice(tail...);
 }
 
 template<typename... Tail>
-void constexpr Log::notice(const std::string& head, const Tail... tail)
+void Log::notice(const std::string& head, const Tail... tail)
 {
-  std::cout << head;
+  std::cout << COLOR_NOTICE << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, head, _noticeTag);
   notice(tail...);
 }
 
 template<typename T, typename... Tail, typename = EnableIfStr<T>>
-void constexpr Log::notice(const T head, const Tail... tail)
+void Log::notice(const T head, const Tail... tail)
 {
-  std::cout << head;
+  std::cout << COLOR_NOTICE << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, head, _noticeTag);
   notice(tail...);
 }
 
 template<typename T, typename... Tail>
-void constexpr Log::notice(const T head, const Tail... tail)
+void Log::notice(const T head, const Tail... tail)
 {
-  std::cout << head;
+  std::cout << COLOR_NOTICE << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, std::to_string(head), _noticeTag);
   notice(tail...);
@@ -110,9 +140,9 @@ void constexpr Log::notice(const T head, const Tail... tail)
 
 
 template<typename... Tail>
-void constexpr Log::warning(const char head, const Tail... tail)
+void Log::warning(const char head, const Tail... tail)
 {
-  std::cerr << head;
+  std::cerr << COLOR_WARNING << head;
 
   std::string str;
   str.assign(1, head);
@@ -121,36 +151,36 @@ void constexpr Log::warning(const char head, const Tail... tail)
 }
 
 template<typename... Tail>
-void constexpr Log::warning(const char* head, const Tail... tail)
+void Log::warning(const char* head, const Tail... tail)
 {
-  std::cerr << head;
+  std::cerr << COLOR_WARNING << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, head, _warningTag);
   warning(tail...);
 }
 
 template<typename... Tail>
-void constexpr Log::warning(const std::string& head, const Tail... tail)
+void Log::warning(const std::string& head, const Tail... tail)
 {
-  std::cerr << head;
+  std::cerr << COLOR_WARNING << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, head, _warningTag);
   warning(tail...);
 }
 
 template<typename T, typename... Tail, typename = EnableIfStr<T>>
-void constexpr Log::warning(const T head, const Tail... tail)
+void Log::warning(const T head, const Tail... tail)
 {
-  std::cerr << head;
+  std::cerr << COLOR_WARNING << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, head, _warningTag);
   warning(tail...);
 }
 
 template<typename T, typename... Tail>
-void constexpr Log::warning(const T head, const Tail... tail)
+void Log::warning(const T head, const Tail... tail)
 {
-  std::cerr << head;
+  std::cerr << COLOR_WARNING << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, std::to_string(head), _warningTag);
   warning(tail...);
@@ -159,9 +189,9 @@ void constexpr Log::warning(const T head, const Tail... tail)
 
 
 template<typename... Tail>
-void constexpr Log::error(const char head, const Tail... tail)
+void Log::error(const char head, const Tail... tail)
 {
-  std::cerr << head;
+  std::cerr << COLOR_ERROR << head;
 
   std::string str;
   str.assign(1, head);
@@ -170,36 +200,36 @@ void constexpr Log::error(const char head, const Tail... tail)
 }
 
 template<typename... Tail>
-void constexpr Log::error(const char* head, const Tail... tail)
+void Log::error(const char* head, const Tail... tail)
 {
-  std::cerr << head;
+  std::cerr << COLOR_ERROR << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, head, _errorTag);
   error(tail...);
 }
 
 template<typename... Tail>
-void constexpr Log::error(const std::string& head, const Tail... tail)
+void Log::error(const std::string& head, const Tail... tail)
 {
-  std::cerr << head;
+  std::cerr << COLOR_ERROR << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, head, _errorTag);
   error(tail...);
 }
 
 template<typename T, typename... Tail, typename = EnableIfStr<T>>
-void constexpr Log::error(const T head, const Tail... tail)
+void Log::error(const T head, const Tail... tail)
 {
-  std::cerr << head;
+  std::cerr << COLOR_ERROR << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, head, _errorTag);
   error(tail...);
 }
 
 template<typename T, typename... Tail>
-void constexpr Log::error(const T head, const Tail... tail)
+void Log::error(const T head, const Tail... tail)
 {
-  std::cerr << head;
+  std::cerr << COLOR_ERROR << head;
 
   _bufIter = _buffer->insert_with_tag(_bufIter, std::to_string(head), _errorTag);
   error(tail...);

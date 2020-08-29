@@ -39,7 +39,7 @@ std::vector<std::string> DB::getTableEntries(const std::string &table)
   sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(_db, request.c_str(), -1, &stmt, NULL) != SQLITE_OK)
   {
-    Log::error("[DB] Failure preparing request [", request, "]\n\t", sqlite3_errmsg(_db), '\n');
+    Log::error("[DB] Failure preparing request [", request, "]:\n\t", sqlite3_errmsg(_db), '\n');
     sqlite3_close(_db);
     throw std::runtime_error("[DB] Failure executing [" + request + "]:\n");
   }
@@ -51,8 +51,7 @@ std::vector<std::string> DB::getTableEntries(const std::string &table)
 
   if (sqlite3_finalize(stmt) != SQLITE_OK)
   {
-    std::cerr << "[DB] Failure finalizing request [" << request << "]\n\t"
-              << sqlite3_errmsg(_db) << '\n';
+    Log::error("[DB] Failure finalizing request [", request, "]:\n\t", sqlite3_errmsg(_db), '\n');
     sqlite3_close(_db);
     throw std::runtime_error("[DB] Failure executing [" + request + "]:\n");
   }

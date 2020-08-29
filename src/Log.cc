@@ -38,3 +38,28 @@ void Log::init(Glib::RefPtr<Gtk::Builder> builder)
 
   _bufIter = _buffer->get_iter_at_offset(0);
 }
+
+
+
+
+void Log::print()
+{
+}
+
+
+void Log::notice()
+{
+  std::cout << COLOR_NORMAL;
+}
+
+
+void Log::warning()
+{
+  std::cerr << COLOR_NORMAL;
+}
+
+
+void Log::error()
+{
+  std::cerr << COLOR_NORMAL;
+}

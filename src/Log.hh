@@ -1,8 +1,8 @@
 #ifndef LOG_HH_
 # define LOG_HH_
 
-# include <iterator>
 # include <gtkmm.h>
+
 
 
 class Log
@@ -20,88 +20,79 @@ public:
 
 
 
-  static void print()
-  {
-  }
+  static void print();
 
   template<typename... Tail>
-  static void constexpr print(const char head, const Tail... tail);
+  static void print(const char head, const Tail... tail);
 
   template<typename... Tail>
-  static void constexpr print(const char* head, const Tail... tail);
+  static void print(const char* head, const Tail... tail);
 
   template<typename... Tail>
-  static void constexpr print(const std::string& head, const Tail... tail);
+  static void print(const std::string& head, const Tail... tail);
 
   template<typename T, typename... Tail, typename = EnableIfStr<T>>
-  static void constexpr print(const T head, const Tail... tail);
+  static void print(const T head, const Tail... tail);
 
   template<typename T, typename... Tail>
-  static void constexpr print(const T head, const Tail... tail);
+  static void print(const T head, const Tail... tail);
 
 
 
-  static void notice()
-  {
-  }
+  static void notice();
 
   template<typename... Tail>
-  static void constexpr notice(const char head, const Tail... tail);
+  static void notice(const char head, const Tail... tail);
 
   template<typename... Tail>
-  static void constexpr notice(const char* head, const Tail... tail);
+  static void notice(const char* head, const Tail... tail);
 
   template<typename... Tail>
-  static void constexpr notice(const std::string& head, const Tail... tail);
+  static void notice(const std::string& head, const Tail... tail);
 
   template<typename T, typename... Tail, typename = EnableIfStr<T>>
-  static void constexpr notice(const T head, const Tail... tail);
+  static void notice(const T head, const Tail... tail);
 
   template<typename T, typename... Tail>
-  static void constexpr notice(const T head, const Tail... tail);
+  static void notice(const T head, const Tail... tail);
 
 
 
-  static void warning()
-  {
-  }
+  static void warning();
 
   template<typename... Tail>
-  static void constexpr warning(const char head, const Tail... tail);
+  static void warning(const char head, const Tail... tail);
 
   template<typename... Tail>
-  static void constexpr warning(const char* head, const Tail... tail);
+  static void warning(const char* head, const Tail... tail);
 
   template<typename... Tail>
-  static void constexpr warning(const std::string& head, const Tail... tail);
+  static void warning(const std::string& head, const Tail... tail);
 
   template<typename T, typename... Tail, typename = EnableIfStr<T>>
-  static void constexpr warning(const T head, const Tail... tail);
+  static void warning(const T head, const Tail... tail);
 
   template<typename T, typename... Tail>
-  static void constexpr warning(const T head, const Tail... tail);
+  static void warning(const T head, const Tail... tail);
 
 
 
-  static void error()
-  {
-  }
+  static void error();
 
   template<typename... Tail>
-  static void constexpr error(const char head, const Tail... tail);
+  static void error(const char head, const Tail... tail);
 
   template<typename... Tail>
-  static void constexpr error(const char* head, const Tail... tail);
+  static void error(const char* head, const Tail... tail);
 
   template<typename... Tail>
-  static void constexpr error(const std::string& head, const Tail... tail);
+  static void error(const std::string& head, const Tail... tail);
 
   template<typename T, typename... Tail, typename = EnableIfStr<T>>
-  static void constexpr error(const T head, const Tail... tail);
+  static void error(const T head, const Tail... tail);
 
   template<typename T, typename... Tail>
-  static void constexpr error(const T head, const Tail... tail);
-
+  static void error(const T head, const Tail... tail);
 
 
 
