@@ -38,28 +38,3 @@ void Log::init(Glib::RefPtr<Gtk::Builder> builder)
 
   _bufIter = _buffer->get_iter_at_offset(0);
 }
-
-
-
-void Log::print(const char* str)
-{
-  _bufIter = _buffer->insert(_bufIter, str);
-}
-
-
-void Log::error(const char* str)
-{
-  _bufIter = _buffer->insert_with_tag(_bufIter, str, _errorTag);
-}
-
-
-void Log::warning(const char* str)
-{
-  _bufIter = _buffer->insert_with_tag(_bufIter, str, _warningTag);
-}
-
-
-void Log::notice(const char* str)
-{
-  _bufIter = _buffer->insert_with_tag(_bufIter, str, _noticeTag);
-}

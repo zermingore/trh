@@ -10,6 +10,7 @@ extern "C" {
 #include <DB.hh>
 #include <db_tables.hh>
 
+#include <Log.hh>
 
 
 // Static members definition
@@ -19,6 +20,7 @@ sqlite3* DB::_db;
 
 void DB::initialize(const std::string file_name)
 {
+  // Log not ready yet
   if (sqlite3_open(file_name.c_str(), &_db))
   {
     std::cerr << "Failure opening DB:\n\t" << sqlite3_errmsg(_db) << '\n';
