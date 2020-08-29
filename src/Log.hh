@@ -20,6 +20,25 @@ public:
   using EnableIfStr = std::enable_if_t<std::is_convertible_v<T, const char*, T>>;
 
 
+
+  static void print()
+  {
+  }
+
+  template<typename... Tail>
+  static void constexpr print(const char head, const Tail... tail);
+
+  template<typename... Tail>
+  static void constexpr print(const char* head, const Tail... tail);
+
+  template<typename T, typename... Tail, typename = EnableIfStr<T>>
+  static void constexpr print(const T head, const Tail... tail);
+
+  template<typename T, typename... Tail>
+  static void constexpr print(const T head, const Tail... tail);
+
+
+
   static void notice()
   {
   }
