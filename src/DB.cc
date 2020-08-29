@@ -63,7 +63,7 @@ std::vector<std::string> DB::getTableEntries(const std::string &table)
 
 bool DB::editWord(int id, const std::string& name, int language, int category)
 {
-  std::cout << "editing word\n";
+  Log::print("editing word\n");
   std::string request =
       "UPDATE words SET id_language=" + std::to_string(language) + ", "
     + "id_category=" + std::to_string(category) + ", "
@@ -74,24 +74,21 @@ bool DB::editWord(int id, const std::string& name, int language, int category)
   sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(_db, request.c_str(), -1, &stmt, NULL) != SQLITE_OK)
   {
-    std::cerr << "[DB] Failure preparing request [" << request << "]\n\t"
-              << sqlite3_errmsg(_db) << '\n';
+    Log::error("[DB] Failure preparing request [", request, "]:\n\t", sqlite3_errmsg(_db), '\n');
     sqlite3_close(_db);
     return false;
   }
 
   if (sqlite3_step(stmt) != SQLITE_DONE)
   {
-    std::cerr << "[DB] Failure step; request [" << request << "]\n\t"
-              << sqlite3_errmsg(_db) << '\n';
+    Log::error("[DB] Failure step; request [", request, "]:\n\t", sqlite3_errmsg(_db), '\n');
     sqlite3_close(_db);
     return false;
   }
 
   if (sqlite3_finalize(stmt) != SQLITE_OK)
   {
-    std::cerr << "[DB] Failure finalizing request [" << request << "]\n\t"
-              << sqlite3_errmsg(_db) << '\n';
+    Log::error("[DB] Failure finalizing request [", request, "]:\n\t", sqlite3_errmsg(_db), '\n');
     sqlite3_close(_db);
     return false;
   }
@@ -103,7 +100,7 @@ bool DB::editWord(int id, const std::string& name, int language, int category)
 
 bool DB::addWord(const std::string& name, int language, int category)
 {
-  std::cout << "adding word" << std::endl;
+  Log::print("adding word");
   std::string request = "INSERT INTO words(id_language, id_category, name, date) VALUES("
     + std::to_string(language) + ", "
     + std::to_string(category) + ", "
@@ -114,24 +111,21 @@ bool DB::addWord(const std::string& name, int language, int category)
   sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(_db, request.c_str(), -1, &stmt, NULL) != SQLITE_OK)
   {
-    std::cerr << "[DB] Failure preparing request [" << request << "]\n\t"
-              << sqlite3_errmsg(_db) << '\n';
+    Log::error("[DB] Failure preparing request [", request, "]:\n\t", sqlite3_errmsg(_db), '\n');
     sqlite3_close(_db);
     return false;
   }
 
   if (sqlite3_step(stmt) != SQLITE_DONE)
   {
-    std::cerr << "[DB] Failure step; request [" << request << "]\n\t"
-              << sqlite3_errmsg(_db) << '\n';
+    Log::error("[DB] Failure step; request [", request, "]:\n\t", sqlite3_errmsg(_db), '\n');
     sqlite3_close(_db);
     return false;
   }
 
   if (sqlite3_finalize(stmt) != SQLITE_OK)
   {
-    std::cerr << "[DB] Failure finalizing request [" << request << "]\n\t"
-              << sqlite3_errmsg(_db) << '\n';
+    Log::error("[DB] Failure finalizing request [", request, "]:\n\t", sqlite3_errmsg(_db), '\n');
     sqlite3_close(_db);
     return false;
   }
@@ -196,7 +190,7 @@ void DB::rawRequest(const std::string request,
   char *err_msg = 0;
   if (sqlite3_exec(_db, request.c_str(), cb, first, &err_msg) != SQLITE_OK)
   {
-    std::cerr << "[DB] Error executing [" << request << "]:\n\t" << err_msg << '\n';
+    Log::error("[DB] Error executing [", request, "]:\n\t", const_cast<const char*> (err_msg), '\n');
     sqlite3_free(err_msg);
     sqlite3_close(_db);
     throw std::runtime_error("[DB] Failure executing [" + request + "]:\n");

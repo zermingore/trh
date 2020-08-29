@@ -5,6 +5,35 @@
 
 
 
+# ifdef __unix__
+#   define COLOR_NORMAL  "\x1B[0m"
+#   define COLOR_RED     "\x1B[31m"
+#   define COLOR_GREEN   "\x1B[32m"
+#   define COLOR_YELLOW  "\x1B[33m"
+#   define COLOR_BLUE    "\x1B[34m"
+#   define COLOR_MAGENTA "\x1B[35m"
+#   define COLOR_CYAN    "\x1B[36m"
+#   define COLOR_WHITE   "\x1B[37m"
+# else
+#   define COLOR_NORMAL  ""
+#   define COLOR_RED     ""
+#   define COLOR_GREEN   ""
+#   define COLOR_YELLOW  ""
+#   define COLOR_BLUE    ""
+#   define COLOR_MAGENTA ""
+#   define COLOR_CYAN    ""
+#   define COLOR_WHITE   ""
+# endif
+
+/// \def Messages specific colors
+# define COLOR_ERROR   COLOR_RED
+# define COLOR_WARNING COLOR_YELLOW
+# define COLOR_SUCCESS COLOR_GREEN
+# define COLOR_VERBOSE COLOR_BLUE
+# define COLOR_NOTICE  COLOR_CYAN
+
+
+
 class Log
 {
 public:
@@ -12,87 +41,31 @@ public:
 
 
 
-  // For every severity, override its print for:
-  // empty parameters, const char*, char, std::string, otherwise use std::to_string
-
-  template<typename T>
-  using EnableIfStr = std::enable_if_t<std::is_constructible_v<const char*, T>>;
-
-
-
   static void print();
 
-  template<typename... Tail>
-  static void print(const char head, const Tail... tail);
-
-  template<typename... Tail>
-  static void print(const char* head, const Tail... tail);
-
-  template<typename... Tail>
-  static void print(const std::string& head, const Tail... tail);
-
-  template<typename T, typename... Tail, typename = EnableIfStr<T>>
-  static void print(const T head, const Tail... tail);
-
   template<typename T, typename... Tail>
-  static void print(const T head, const Tail... tail);
+  static void print(T head, Tail... tail);
 
 
 
   static void notice();
 
-  template<typename... Tail>
-  static void notice(const char head, const Tail... tail);
-
-  template<typename... Tail>
-  static void notice(const char* head, const Tail... tail);
-
-  template<typename... Tail>
-  static void notice(const std::string& head, const Tail... tail);
-
-  template<typename T, typename... Tail, typename = EnableIfStr<T>>
-  static void notice(const T head, const Tail... tail);
-
   template<typename T, typename... Tail>
-  static void notice(const T head, const Tail... tail);
+  static void notice(T head, Tail... tail);
 
 
 
   static void warning();
 
-  template<typename... Tail>
-  static void warning(const char head, const Tail... tail);
-
-  template<typename... Tail>
-  static void warning(const char* head, const Tail... tail);
-
-  template<typename... Tail>
-  static void warning(const std::string& head, const Tail... tail);
-
-  template<typename T, typename... Tail, typename = EnableIfStr<T>>
-  static void warning(const T head, const Tail... tail);
-
   template<typename T, typename... Tail>
-  static void warning(const T head, const Tail... tail);
+  static void warning(T head, Tail... tail);
 
 
 
   static void error();
 
-  template<typename... Tail>
-  static void error(const char head, const Tail... tail);
-
-  template<typename... Tail>
-  static void error(const char* head, const Tail... tail);
-
-  template<typename... Tail>
-  static void error(const std::string& head, const Tail... tail);
-
-  template<typename T, typename... Tail, typename = EnableIfStr<T>>
-  static void error(const T head, const Tail... tail);
-
   template<typename T, typename... Tail>
-  static void error(const T head, const Tail... tail);
+  static void error(T head, Tail... tail);
 
 
 
@@ -105,6 +78,8 @@ private:
   static Glib::RefPtr<Gtk::TextTag> _noticeTag;
   static Glib::RefPtr<Gtk::TextTag> _warningTag;
   static Glib::RefPtr<Gtk::TextTag> _errorTag;
+
+  static std::stringstream _printerAccu;
 };
 
 

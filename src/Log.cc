@@ -11,6 +11,8 @@ Glib::RefPtr<Gtk::TextTag> Log::_noticeTag;
 Glib::RefPtr<Gtk::TextTag> Log::_warningTag;
 Glib::RefPtr<Gtk::TextTag> Log::_errorTag;
 
+std::stringstream Log::_printerAccu;
+
 
 
 void Log::init(Glib::RefPtr<Gtk::Builder> builder)
@@ -44,22 +46,39 @@ void Log::init(Glib::RefPtr<Gtk::Builder> builder)
 
 void Log::print()
 {
+  std::cout << _printerAccu.str() << COLOR_NORMAL;
+  _bufIter = _buffer->insert(_bufIter, _printerAccu.str().c_str());
+
+  _printerAccu.str(std::string());
+  _printerAccu.clear();
 }
 
 
 void Log::notice()
 {
-  std::cout << COLOR_NORMAL;
+  std::cout << COLOR_NOTICE << _printerAccu.str() << COLOR_NORMAL;
+  _bufIter = _buffer->insert_with_tag(_bufIter, _printerAccu.str().c_str(), _noticeTag);
+
+  _printerAccu.str(std::string());
+  _printerAccu.clear();
 }
 
 
 void Log::warning()
 {
-  std::cerr << COLOR_NORMAL;
+  std::cerr << COLOR_WARNING << _printerAccu.str() << COLOR_NORMAL;
+  _bufIter = _buffer->insert_with_tag(_bufIter, _printerAccu.str().c_str(), _warningTag);
+
+  _printerAccu.str(std::string());
+  _printerAccu.clear();
 }
 
 
 void Log::error()
 {
-  std::cerr << COLOR_NORMAL;
+  std::cerr << COLOR_ERROR << _printerAccu.str()  << COLOR_NORMAL;
+  _bufIter = _buffer->insert_with_tag(_bufIter, _printerAccu.str().c_str(), _errorTag);
+
+  _printerAccu.str(std::string());
+  _printerAccu.clear();
 }

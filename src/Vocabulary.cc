@@ -6,6 +6,7 @@
 
 #include <DB.hh>
 #include <db_tables.hh>
+#include <Log.hh>
 
 
 
@@ -139,10 +140,10 @@ void Vocabulary::cbOnConfirmAddWord()
 
   if (_editMode)
   {
-    std::cout << "id: " << _selectedWord.id << '\n';
-    std::cout << "name: " << _selectedWord.name << '\n';
-    std::cout << "language: " << _selectedWord.language << '\n';
-    std::cout << "category: " << _selectedWord.category << '\n';
+    Log::print("id: ", _selectedWord.id, '\n',
+               "name: ", _selectedWord.name, '\n',
+               "language: ", _selectedWord.language, '\n',
+               "category: ", _selectedWord.category, '\n');
 
     DB::editWord(_selectedWord.id, entryName->get_text(), _selectedWord.language, _selectedWord.category);
   }
@@ -169,14 +170,14 @@ void Vocabulary::cbOnConfirmAddWord()
 
 void Vocabulary::cbOnSearch()
 {
-  std::cout << "search clicked" << std::endl;
+  Log::print("search clicked");
 }
 
 
 
 void Vocabulary::cbEditWord()
 {
-  std::cout << "\n--- cbEditWord... ";
+  Log::print("\n--- cbEditWord... ");
 
   // Reset selected word (with error values)
   _selectedWord.category = 0;
@@ -186,13 +187,12 @@ void Vocabulary::cbEditWord()
   _addWordDisplayed = !_addWordDisplayed;
   if (!_addWordDisplayed)
   {
-    std::cout << "OFF\n";
+    Log::print("OFF\n");
     _boxAddWord->hide();
     return;
   }
   _boxAddWord->show();
-  std::cout << "ON\n";
-
+  Log::print("ON\n");
 
   DbTableColumnsWords dbWord;
   Glib::RefPtr<Gtk::ListStore> list_words = Gtk::ListStore::create(dbWord);
@@ -210,19 +210,19 @@ void Vocabulary::cbEditWord()
       || _selectedWord.category <= 0
       || _selectedWord.language <= 0)
   {
-    std::cerr << "Unable to locate word\n"
-              << "id:       " << _selectedWord.id << "\n"
-              << "category: " << _selectedWord.category << "\n"
-              << "language: " << _selectedWord.language << "\n"
-              << "name:     " << _selectedWord.name << "\n\n";
+    Log::warning(  "Unable to locate word\n"
+                 , "id:       ", _selectedWord.id, "\n"
+                 , "category: ", _selectedWord.category, "\n"
+                 , "language: ", _selectedWord.language, "\n"
+                 , "name:     ", _selectedWord.name, "\n\n");
     return;
   }
 
-  std::cout << "activating...\n"
-            << "id:       " << _selectedWord.id << "\n"
-            << "category: " << _selectedWord.category << "\n"
-            << "language: " << _selectedWord.language << "\n"
-            << "name:     " << _selectedWord.name << "\n\n";
+  Log::print(  "activating...\n"
+             , "id:       ", _selectedWord.id, "\n"
+             , "category: ", _selectedWord.category, "\n"
+             , "language: ", _selectedWord.language, "\n"
+             , "name:     ", _selectedWord.name, "\n\n");
 
   Gtk::Entry *entryName = nullptr;
   _builder->get_widget("addWordName", entryName);
