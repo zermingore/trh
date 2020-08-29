@@ -5,7 +5,6 @@
 # include <gtkmm.h>
 
 
-#include <iostream>
 class Log
 {
 public:
@@ -14,10 +13,10 @@ public:
 
 
   // For every severity, override its print for:
-  // empty parameters, const char*, char, otherwise use std::to_string
+  // empty parameters, const char*, char, std::string, otherwise use std::to_string
 
   template<typename T>
-  using EnableIfStr = std::enable_if_t<std::is_convertible_v<T, const char*, T>>;
+  using EnableIfStr = std::enable_if_t<std::is_constructible_v<const char*, T>>;
 
 
 
@@ -30,6 +29,9 @@ public:
 
   template<typename... Tail>
   static void constexpr print(const char* head, const Tail... tail);
+
+  template<typename... Tail>
+  static void constexpr print(const std::string& head, const Tail... tail);
 
   template<typename T, typename... Tail, typename = EnableIfStr<T>>
   static void constexpr print(const T head, const Tail... tail);
@@ -49,6 +51,9 @@ public:
   template<typename... Tail>
   static void constexpr notice(const char* head, const Tail... tail);
 
+  template<typename... Tail>
+  static void constexpr notice(const std::string& head, const Tail... tail);
+
   template<typename T, typename... Tail, typename = EnableIfStr<T>>
   static void constexpr notice(const T head, const Tail... tail);
 
@@ -67,6 +72,9 @@ public:
   template<typename... Tail>
   static void constexpr warning(const char* head, const Tail... tail);
 
+  template<typename... Tail>
+  static void constexpr warning(const std::string& head, const Tail... tail);
+
   template<typename T, typename... Tail, typename = EnableIfStr<T>>
   static void constexpr warning(const T head, const Tail... tail);
 
@@ -84,6 +92,9 @@ public:
 
   template<typename... Tail>
   static void constexpr error(const char* head, const Tail... tail);
+
+  template<typename... Tail>
+  static void constexpr error(const std::string& head, const Tail... tail);
 
   template<typename T, typename... Tail, typename = EnableIfStr<T>>
   static void constexpr error(const T head, const Tail... tail);
