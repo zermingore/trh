@@ -45,14 +45,12 @@ CREATE TABLE words(
   id INTEGER PRIMARY KEY,
   id_language INTEGER NOT NULL,
   id_category INTEGER NOT NULL,
-  id_plural INTEGER NOT NULL DEFAULT 0,
 
   name TEXT,
   date TEXT DEFAULT CURRENT_TIMESTAMP,
 
   FOREIGN KEY(id_category) REFERENCES categories(id)
   FOREIGN KEY(id_language) REFERENCES languages(id)
-  FOREIGN KEY(id_plural) REFERENCES plurals(id)
 );
 
 
