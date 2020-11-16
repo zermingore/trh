@@ -21,6 +21,7 @@ SQL_INSERT_ID="INSERT INTO words(id, id_language, id_category, name)\
 function main()
 {
   echo -n > "$0_statements.sql"
+  echo -n > "$0_log"
 
   while read line; do
     if [[ $line =~ ^# || $line =~ ^$ ]]; then
@@ -59,12 +60,16 @@ function main()
 
       # Fetch data for each word
       id_lg=$(getLanguage "$lg1")
-      if [[ $id_lg == "" ]]; then
-        echo "Invalid line [$line] (lg: [$id_lg] cat: [$cat1] name: [$name1])"
-        break
+      if [[ $? -ne 0 ]]; then
+         echo "[$line] Error getting language: $id_lg" | tee -a "$0_log"
+         exit 2
       fi
 
       id_cat=$(getCategory "$cat1")
+      if [[ $? -ne 0 ]]; then
+        echo "[$line] Error getting category: $id_cat" | tee -a "$0_log"
+        exit 2
+      fi
 
 
       sql=$(echo "$SQL_INSERT" \
@@ -72,7 +77,6 @@ function main()
               | sed "s/__ID_CAT__/$id_cat/" \
               | sed "s/__NAME__/$name1/" \
          )
-
 
       echo "$sql" >> "$0_statements.sql"
 
@@ -107,6 +111,7 @@ function getLanguage()
       ;;
     *)
       echo "invalid language [$1]"
+      return 1
       ;;
   esac
 }
@@ -172,9 +177,9 @@ function getCategory()
       echo 14
       ;;
 
-    "unknown")
-      echo "Unknown category [$cat1] -> assigning unknown" >&2
-      exit 3
+    *)
+      echo "Unknown category [$cat1]"
+      return 1
       ;;
   esac
 }
