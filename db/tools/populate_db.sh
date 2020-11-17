@@ -5,7 +5,7 @@
 
 # TODO
 # [ ] Fetch categories / languages from schema
-# [ ] More than 2 translations
+# [ ] Generic number of translations (remove copy/paste; >2 translations)
 
 
 
@@ -20,7 +20,7 @@ SQL_INSERT_TR="INSERT INTO translations(id_word_src, id_word_dst) VALUES(\
 
 function main()
 {
-  echo -n > "$0_statements.sql"
+  echo "BEGIN TRANSACTION;" > "$0_statements.sql"
   echo -n > "$0_log"
 
   while read line; do
@@ -142,6 +142,7 @@ function main()
     done < <(echo "$line")
 
   done < content
+  echo "COMMIT;" >> "$0_statements.sql"
 }
 
 
