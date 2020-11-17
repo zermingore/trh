@@ -20,6 +20,17 @@ SQL_INSERT_TR="INSERT INTO translations(id_word_src, id_word_dst) VALUES(\
 
 function main()
 {
+  if [[ $# != 1 ]]; then
+    echo "Expecting a unique argument: source file"
+    exit 1
+  fi
+
+  local content_file=$1
+  if ! [[ -f $content_file ]]; then
+    echo "Unreadable source file [$content_file]"
+    exit 1
+  fi
+
   echo "BEGIN TRANSACTION;" > "$0_statements.sql"
   echo -n > "$0_log"
 
@@ -27,7 +38,6 @@ function main()
     if [[ $line =~ ^# || $line =~ ^$ ]]; then
       continue
     fi
-    echo "__ $line __"
 
     while IFS="|" read -r lg1 cat1 name1 lg2 cat2 name2 lg3 cat3 name3 rest; do
       # Sanity checks
@@ -141,7 +151,7 @@ function main()
 
     done < <(echo "$line")
 
-  done < content
+  done < "$content_file"
   echo "COMMIT;" >> "$0_statements.sql"
 }
 
