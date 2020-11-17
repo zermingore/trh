@@ -13,9 +13,9 @@
 SQL_INSERT="INSERT INTO words(id_language, id_category, name)\
  VALUES(__ID_LG__, __ID_CAT__, \"__NAME__\");"
 
-SQL_INSERT_ID="INSERT INTO words(id, id_language, id_category, name)\
- VALUES(__ID__, __ID_LG__, __ID_CAT__, \"__NAME__\");"
-
+SQL_INSERT_TR="INSERT INTO translations(id_word_src, id_word_dst) VALUES(\
+ (SELECT id FROM words WHERE id_language=__ID_LG__ AND name=\"__NAME__\" AND id_category=__ID_CAT__),\
+ last_insert_rowid());"
 
 
 function main()
@@ -59,37 +59,86 @@ function main()
 
 
       # Fetch data for each word
-      id_lg=$(getLanguage "$lg1")
+      id_lg1=$(getLanguage "$lg1")
       if [[ $? -ne 0 ]]; then
-         echo "[$line] Error getting language: $id_lg" | tee -a "$0_log"
+         echo "[$line] Error getting language: $id_lg1" | tee -a "$0_log"
          exit 2
       fi
 
-      id_cat=$(getCategory "$cat1")
+      id_cat1=$(getCategory "$cat1")
       if [[ $? -ne 0 ]]; then
-        echo "[$line] Error getting category: $id_cat" | tee -a "$0_log"
+        echo "[$line] Error getting category: $id_cat1" | tee -a "$0_log"
         exit 2
       fi
 
-
       sql=$(echo "$SQL_INSERT" \
-              | sed "s/__ID_LG__/$id_lg/" \
-              | sed "s/__ID_CAT__/$id_cat/" \
+              | sed "s/__ID_LG__/$id_lg1/" \
+              | sed "s/__ID_CAT__/$id_cat1/" \
               | sed "s/__NAME__/$name1/" \
          )
-
       echo "$sql" >> "$0_statements.sql"
 
 
 
-      # TODO
-      echo "2: $lg2"
-      echo "c: $cat2"
-      echo "n: $name2"
+      if [[ $lg2 != "" ]];then
+        id_lg=$(getLanguage "$lg2")
+        if [[ $? -ne 0 ]]; then
+          echo "[$line] Error getting language: $id_lg" | tee -a "$0_log"
+          exit 2
+        fi
 
-      echo "3: $lg3"
-      echo "c: $cat3"
-      echo "n: $name3"
+        id_cat=$(getCategory "$cat2")
+        if [[ $? -ne 0 ]]; then
+          echo "[$line] Error getting category: $id_cat" | tee -a "$0_log"
+          exit 2
+        fi
+
+        sql=$(echo "$SQL_INSERT" \
+                | sed "s/__ID_LG__/$id_lg/" \
+                | sed "s/__ID_CAT__/$id_cat/" \
+                | sed "s/__NAME__/$name2/" \
+           )
+        echo "$sql" >> "$0_statements.sql"
+
+        sql=$(echo "$SQL_INSERT_TR" \
+                | sed "s/__ID_LG__/$id_lg1/" \
+                | sed "s/__ID_CAT__/$id_cat1/" \
+                | sed "s/__NAME__/$name1/" \
+           )
+        echo "$sql" >> "$0_statements.sql"
+      fi
+
+
+
+      if [[ $lg3 != "" ]];then
+        id_lg=$(getLanguage "$lg3")
+        if [[ $? -ne 0 ]]; then
+          echo "[$line] Error getting language: $id_lg" | tee -a "$0_log"
+          exit 2
+        fi
+
+        id_cat=$(getCategory "$cat3")
+        if [[ $? -ne 0 ]]; then
+          echo "[$line] Error getting category: $id_cat" | tee -a "$0_log"
+          exit 2
+        fi
+
+        sql=$(echo "$SQL_INSERT" \
+                | sed "s/__ID_LG__/$id_lg/" \
+                | sed "s/__ID_CAT__/$id_cat/" \
+                | sed "s/__NAME__/$name3/" \
+           )
+        echo "$sql" >> "$0_statements.sql"
+
+        sql=$(echo "$SQL_INSERT_TR" \
+                | sed "s/__ID_LG__/$id_lg1/" \
+                | sed "s/__ID_CAT__/$id_cat1/" \
+                | sed "s/__NAME__/$name1/" \
+           )
+        echo "$sql" >> "$0_statements.sql"
+      fi
+
+
     done < <(echo "$line")
 
   done < content
