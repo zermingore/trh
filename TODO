@@ -13,20 +13,26 @@
 *** TODO Sub-window / swipe
 
 
-** TODO Data
+** DONE Data
+   CLOSED: [2020-12-19 Sat 15:14]
 *** DONE Sort alphabetically
     CLOSED: [2020-06-18 Thu 19:58]
-*** TODO Sort last added
+*** DONE Sort last added
+    CLOSED: [2020-12-19 Sat 15:14]
 
 
 ** TODO Vocabulary
-*** TODO Add word
-*** TODO Edit word
+*** DONE Add word
+    CLOSED: [2020-12-19 Sat 15:14]
+*** DONE Edit word
+    CLOSED: [2020-12-19 Sat 15:14]
 *** TODO Hide word
 
 
-** TODO Grammar
-*** TODO Display rules
+** DONE Grammar
+   CLOSED: [2020-12-19 Sat 15:15]
+*** DONE Display rules
+    CLOSED: [2020-12-19 Sat 15:15]
 
 
 ** DONE Database
@@ -36,4 +42,4 @@
 
 
 ** TODO Clean
-*** TODO fetch catogories / languages
+*** TODO Fetch categories / languages
