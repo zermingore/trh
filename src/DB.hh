@@ -56,7 +56,15 @@ public:
    * @param first first result
    * @warning throws
    */
-  static void getWordsLanguageSorted(int language_id, void *first);
+  static void getWordsLanguageSortedName(int language_id, void *first);
+
+  /**
+   * @brief Get every words, sorted by insertion date
+   * @param language_id language to retrieve the words from
+   * @param first first result
+   * @warning throws
+   */
+  static void getWordsLanguageSortedInsertionDate(int language_id, void *first);
 
   /**
    * @brief Get a specific word

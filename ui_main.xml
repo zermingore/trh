@@ -26,6 +26,22 @@
         </child>
 
         <child>
+          <object class="GtkButton" id="sort">
+            <property name="visible">True</property>
+            <style>
+              <class name="image-button"/>
+            </style>
+            <child>
+              <object class="GtkImage" id="sort-icon">
+                <property name="visible">True</property>
+                <property name="icon-name">gtk-sort-descending</property>
+                <property name="icon-size">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
           <object class="GtkButton" id="search">
             <property name="visible">True</property>
             <!-- <property name="sensitive">False</property> -->

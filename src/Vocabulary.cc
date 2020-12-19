@@ -28,7 +28,7 @@ Vocabulary::Vocabulary(Glib::RefPtr<Gtk::Builder> builder)
   refTreeSelection->signal_changed().connect(
     sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
 
-  DB::getWordsLanguageSorted(2, (void*) treeModel.get());
+  DB::getWordsLanguageSortedName(2, (void*) treeModel.get());
 
   vocabularyList->append_column("Name", tableColumnsWords.name);
 
@@ -40,6 +40,10 @@ Vocabulary::Vocabulary(Glib::RefPtr<Gtk::Builder> builder)
   Gtk::Button* addButton;
   _builder->get_widget("add", addButton);
   addButton->signal_clicked().connect(sigc::mem_fun(*this, &Vocabulary::cbOnAdd));
+
+  Gtk::Button* sortButton;
+  _builder->get_widget("sort", sortButton);
+  sortButton->signal_clicked().connect(sigc::mem_fun(*this, &Vocabulary::cbOnSortWords));
 
   Gtk::Button* editButton;
   _builder->get_widget("edit", editButton);
@@ -163,7 +167,7 @@ void Vocabulary::cbOnConfirmAddWord()
   refTreeSelection->signal_changed().connect(
     sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
 
-  DB::getWordsLanguageSorted(2, (void*) treeModel.get());
+  DB::getWordsLanguageSortedName(2, (void*) treeModel.get());
 }
 
 
@@ -258,4 +262,26 @@ void Vocabulary::cbOnAdd()
     return;
   }
   _boxAddWord->hide();
+}
+
+
+
+void Vocabulary::cbOnSortWords()
+{
+  Gtk::Entry *entryName = nullptr;
+  _builder->get_widget("addWordName", entryName);
+
+
+  // Refresh the vocabulary list
+  DbTableColumnsWords tableColumnsWords;
+  Gtk::TreeView* vocabularyList = nullptr;
+  _builder->get_widget("vocabularyList", vocabularyList);
+  Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
+  vocabularyList->set_model(treeModel);
+
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
+  refTreeSelection->signal_changed().connect(
+    sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
+
+  DB::getWordsLanguageSortedInsertionDate(2, (void*) treeModel.get());
 }

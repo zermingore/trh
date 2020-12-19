@@ -135,10 +135,19 @@ bool DB::addWord(const std::string& name, int language, int category)
 
 
 
-void DB::getWordsLanguageSorted(int language_id, void *first)
+void DB::getWordsLanguageSortedName(int language_id, void *first)
 {
   const std::string request =
     "SELECT * FROM words WHERE id_language=" + std::to_string(language_id) + " ORDER BY name ASC";
+  rawRequest(request.c_str(), dbFetchWords, first);
+}
+
+
+
+void DB::getWordsLanguageSortedInsertionDate(int language_id, void *first)
+{
+  const std::string request =
+    "SELECT * FROM words WHERE id_language=" + std::to_string(language_id) + " ORDER BY date DESC";
   rawRequest(request.c_str(), dbFetchWords, first);
 }
 

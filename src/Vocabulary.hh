@@ -35,6 +35,7 @@ private:
   void cbOnAdd();
   void cbOnConfirmAddWord();
   void cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection);
+  void cbOnSortWords();
 
 
   const Glib::RefPtr<Gtk::Builder> _builder;
