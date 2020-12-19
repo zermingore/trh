@@ -100,7 +100,35 @@ bool DB::editWord(int id, const std::string& name, int language, int category)
 
 bool DB::addWord(const std::string& name, int language, int category)
 {
-  Log::print("adding word");
+  Log::print("addWord: checking existence\n");
+  std::string check_exists =
+      "SELECT * FROM words WHERE id_language=" + std::to_string(language)
+    + " AND id_category=" + std::to_string(category)
+    + " AND name='" + name + "';";
+
+  sqlite3_stmt *stmt;
+  if (sqlite3_prepare_v2(_db, check_exists.c_str(), -1, &stmt, NULL) != SQLITE_OK)
+  {
+    Log::error("[DB] Failure preparing request [", check_exists, "]:\n\t", sqlite3_errmsg(_db), '\n');
+    sqlite3_close(_db);
+    return false;
+  }
+
+  if (sqlite3_step(stmt) != SQLITE_DONE)
+  {
+    Log::error("Word already exists (same attributes); NOT adding a duplicate\n");
+    return false;
+  }
+
+  if (sqlite3_finalize(stmt) != SQLITE_OK)
+  {
+    Log::error("[DB] Failure finalizing request [", check_exists, "]:\n\t", sqlite3_errmsg(_db), '\n');
+    sqlite3_close(_db);
+    return false;
+  }
+
+
+  Log::print("adding word\n");
   std::string request = "INSERT INTO words(id_language, id_category, name, date) VALUES("
     + std::to_string(language) + ", "
     + std::to_string(category) + ", "
@@ -108,7 +136,6 @@ bool DB::addWord(const std::string& name, int language, int category)
     + "CURRENT_TIMESTAMP"
     + ");"; /// \todo Handle escape quoting
 
-  sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(_db, request.c_str(), -1, &stmt, NULL) != SQLITE_OK)
   {
     Log::error("[DB] Failure preparing request [", request, "]:\n\t", sqlite3_errmsg(_db), '\n');
