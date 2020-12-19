@@ -1,5 +1,9 @@
 db/custom/
+trh
 
+
+# build
 build/
 cross_build
-trh
+CMakeCache.txt
+CMakeFiles/
