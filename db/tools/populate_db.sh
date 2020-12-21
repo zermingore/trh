@@ -5,7 +5,7 @@
 
 # TODO
 # [ ] Fetch categories / languages from schema
-# [ ] Generic number of translations (remove copy/paste; >2 translations)
+# [X] Generic number of translations (remove copy/paste; >2 translations)
 
 
 
@@ -38,78 +38,55 @@ function main()
     if [[ $line =~ ^# || $line =~ ^$ ]]; then
       continue
     fi
+    echo "$line"
 
-    while IFS="|" read -r lg1 cat1 name1 lg2 cat2 name2 lg3 cat3 name3 rest; do
-      # Sanity checks
-      if [[ $rest != "" ]]; then
-        echo "Ignoring Ill-formed line [$line] (unexpected [$rest])"
-        echo "[TODO] handle more than 2 translations"
+    local tokens
+    IFS="|" read -ra tokens <<< "$line"
+    if [[ $((${#tokens[@]} % 3)) != 0 ]]; then
+      echo "Skipping [$line]: Expecting groups of 3 tokens" | tee -a "$0_log"
+      continue
+    fi
+
+    local id_lg1=""
+    local id_cat1=""
+    local name1=""
+    local -i index=0
+    while [[ $((index + 3)) -le ${#tokens[@]} ]]; do
+      local lg=${tokens[index]}
+      local cat=${tokens[index + 1]}
+      local name=${tokens[index + 2]}
+
+      if [[ $lg == "" || $cat == "" || $name == "" ]]; then
+        echo "Invalid line [$line] (lg: [$lg] cat: [$cat] name: [$name])"
         break
       fi
-
-      if [[ $lg1 == "" || $cat1 == "" || $name1 == "" ]]; then
-        echo "Invalid line [$line] (lg: [$lg1] cat: [$cat1] name: [$name1])"
-        break
-      fi
-
-      if [[ $lg2 != "" ]]; then
-        if [[ $cat2 == "" || $name2 == "" ]]; then
-          echo "Invalid line [$line] (lg2: [$lg2] cat2: [$cat2] name2: [$name2])"
-          break
-        fi
-      fi
-
-      if [[ $lg3 != "" ]]; then
-        if [[ $cat3 == "" || $name3 == "" ]]; then
-          echo "Invalid line [$line] (lg3: [$lg3] cat3: [$cat3] name3: [$name3])"
-          break
-        fi
-      fi
-
-
 
       # Fetch data for each word
-      id_lg1=$(getLanguage "$lg1")
+      id_lg=$(getLanguage "$lg")
       if [[ $? -ne 0 ]]; then
-         echo "[$line] Error getting language: $id_lg1" | tee -a "$0_log"
+         echo "[$line] Error getting language: $id_lg" | tee -a "$0_log"
          exit 2
       fi
 
-      id_cat1=$(getCategory "$cat1")
+      id_cat=$(getCategory "$cat")
       if [[ $? -ne 0 ]]; then
-        echo "[$line] Error getting category: $id_cat1" | tee -a "$0_log"
+        echo "[$line] Error getting category: $id_cat" | tee -a "$0_log"
         exit 2
       fi
 
       sql=$(echo "$SQL_INSERT" \
-              | sed "s/__ID_LG__/$id_lg1/" \
-              | sed "s/__ID_CAT__/$id_cat1/" \
-              | sed "s/__NAME__/$name1/" \
+              | sed "s/__ID_LG__/$id_lg/" \
+              | sed "s/__ID_CAT__/$id_cat/" \
+              | sed "s/__NAME__/$name/" \
          )
       echo "$sql" >> "$0_statements.sql"
 
 
-
-      if [[ $lg2 != "" ]];then
-        id_lg=$(getLanguage "$lg2")
-        if [[ $? -ne 0 ]]; then
-          echo "[$line] Error getting language: $id_lg" | tee -a "$0_log"
-          exit 2
-        fi
-
-        id_cat=$(getCategory "$cat2")
-        if [[ $? -ne 0 ]]; then
-          echo "[$line] Error getting category: $id_cat" | tee -a "$0_log"
-          exit 2
-        fi
-
-        sql=$(echo "$SQL_INSERT" \
-                | sed "s/__ID_LG__/$id_lg/" \
-                | sed "s/__ID_CAT__/$id_cat/" \
-                | sed "s/__NAME__/$name2/" \
-           )
-        echo "$sql" >> "$0_statements.sql"
-
+      if [[ $index == 0 ]]; then
+        id_lg1="$id_lg"
+        id_cat1="$id_cat"
+        name1="$name"
+      else
         sql=$(echo "$SQL_INSERT_TR" \
                 | sed "s/__ID_LG__/$id_lg1/" \
                 | sed "s/__ID_CAT__/$id_cat1/" \
@@ -118,38 +95,8 @@ function main()
         echo "$sql" >> "$0_statements.sql"
       fi
 
-
-
-      if [[ $lg3 != "" ]];then
-        id_lg=$(getLanguage "$lg3")
-        if [[ $? -ne 0 ]]; then
-          echo "[$line] Error getting language: $id_lg" | tee -a "$0_log"
-          exit 2
-        fi
-
-        id_cat=$(getCategory "$cat3")
-        if [[ $? -ne 0 ]]; then
-          echo "[$line] Error getting category: $id_cat" | tee -a "$0_log"
-          exit 2
-        fi
-
-        sql=$(echo "$SQL_INSERT" \
-                | sed "s/__ID_LG__/$id_lg/" \
-                | sed "s/__ID_CAT__/$id_cat/" \
-                | sed "s/__NAME__/$name3/" \
-           )
-        echo "$sql" >> "$0_statements.sql"
-
-        sql=$(echo "$SQL_INSERT_TR" \
-                | sed "s/__ID_LG__/$id_lg1/" \
-                | sed "s/__ID_CAT__/$id_cat1/" \
-                | sed "s/__NAME__/$name1/" \
-           )
-        echo "$sql" >> "$0_statements.sql"
-      fi
-
-
-    done < <(echo "$line")
+      index=$((index + 3))
+    done
 
   done < "$content_file"
   echo "COMMIT;" >> "$0_statements.sql"
