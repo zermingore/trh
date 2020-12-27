@@ -223,19 +223,22 @@
 
     <!-- Debug console -->
     <child>
-      <object class="GtkScrolledWindow" id="consoleWindow">
-        <property name="visible">True</property>
-        <property name="hscrollbar_policy">automatic</property>
-        <property name="vscrollbar_policy">automatic</property>
-        <property name="min_content_height">100</property>
-        <child>
-          <object class="GtkTextView" id="console">
-            <property name="visible">True</property>
-            <property name="editable">False</property>
-          </object>
-       </child>
-      </object>
+      <object class="GtkSeparator"/>
     </child>
+    <child>
+      <object class="GtkScrolledWindow" id="consoleWindow">
+      <property name="visible">True</property>
+      <property name="hscrollbar_policy">automatic</property>
+      <property name="vscrollbar_policy">automatic</property>
+      <property name="min_content_height">100</property>
+      <child>
+        <object class="GtkTextView" id="console">
+          <property name="visible">True</property>
+          <property name="editable">False</property>
+        </object>
+      </child>
+    </object>
+  </child>
 
   </object>
 </interface>
