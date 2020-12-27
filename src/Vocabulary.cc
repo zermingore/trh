@@ -32,10 +32,9 @@ Vocabulary::Vocabulary(Glib::RefPtr<Gtk::Builder> builder)
 
   vocabularyList->append_column("Name", tableColumnsWords.name);
 
-
-  Gtk::Button* searchButton;
-  _builder->get_widget("search", searchButton);
-  searchButton->signal_clicked().connect(sigc::mem_fun(*this, &Vocabulary::cbOnSearch));
+  Gtk::SearchEntry* searchBar;
+  _builder->get_widget("search", searchBar);
+  searchBar->signal_search_changed().connect(sigc::mem_fun(*this, &Vocabulary::cbOnSearch));
 
   Gtk::Button* addButton;
   _builder->get_widget("add", addButton);

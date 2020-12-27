@@ -42,19 +42,8 @@
         </child>
 
         <child>
-          <object class="GtkButton" id="search">
+          <object class="GtkSearchEntry" id="search">
             <property name="visible">True</property>
-            <!-- <property name="sensitive">False</property> -->
-            <style>
-              <class name="image-button"/>
-            </style>
-            <child>
-              <object class="GtkImage" id="search-icon">
-                <property name="visible">True</property>
-                <property name="icon-name">edit-find-symbolic</property>
-                <property name="icon-size">1</property>
-              </object>
-            </child>
           </object>
         </child>
 
