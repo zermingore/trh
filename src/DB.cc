@@ -162,10 +162,12 @@ bool DB::addWord(const std::string& name, int language, int category)
 
 
 
-void DB::getWordsLanguageSortedName(int language_id, void *first)
+void DB::getWordsLanguageSortedName(int language_id, void *first, const std::string filter)
 {
   const std::string request =
-    "SELECT * FROM words WHERE id_language=" + std::to_string(language_id) + " ORDER BY name ASC";
+    "SELECT * FROM words WHERE id_language=" + std::to_string(language_id)
+    + " and name LIKE '%" + filter + "%' ORDER BY name ASC";
+
   rawRequest(request.c_str(), dbFetchWords, first);
 }
 

@@ -173,8 +173,20 @@ void Vocabulary::cbOnConfirmAddWord()
 
 void Vocabulary::cbOnSearch(const Glib::ustring string)
 {
+  auto content{_search->get_text()};
   Log::print("search clicked ");
   Log::print(string + _search->get_text());
+
+  DbTableColumnsWords tableColumnsWords;
+  Gtk::TreeView* vocabularyList = nullptr;
+  _builder->get_widget("vocabularyList", vocabularyList);
+  Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
+  vocabularyList->set_model(treeModel);
+
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
+  refTreeSelection->signal_changed().connect(
+    sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
+  DB::getWordsLanguageSortedName(2, (void*) treeModel.get(), _search->get_text());
 }
 
 

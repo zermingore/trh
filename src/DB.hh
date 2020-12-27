@@ -52,11 +52,14 @@ public:
 
   /**
    * @brief Get every words, sorted alphabetically
-   * @param language_id language to retrieve the words from
-   * @param first first result
+   * @param language_id Language to retrieve the words from
+   * @param first First result
+   * @param filter Eventual filter on the name (used with words.name LIKE filter)
    * @warning throws
    */
-  static void getWordsLanguageSortedName(int language_id, void *first);
+  static void getWordsLanguageSortedName(int language_id,
+                                         void *first,
+                                         const std::string filter = "");
 
   /**
    * @brief Get every words, sorted by insertion date
