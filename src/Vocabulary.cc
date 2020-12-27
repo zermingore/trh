@@ -32,9 +32,9 @@ Vocabulary::Vocabulary(Glib::RefPtr<Gtk::Builder> builder)
 
   vocabularyList->append_column("Name", tableColumnsWords.name);
 
-  Gtk::SearchEntry* searchBar;
-  _builder->get_widget("search", searchBar);
-  searchBar->signal_search_changed().connect(sigc::mem_fun(*this, &Vocabulary::cbOnSearch));
+  _builder->get_widget("search", _search);
+  _search->signal_search_changed().connect(
+    sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSearch), _search->get_text()));
 
   Gtk::Button* addButton;
   _builder->get_widget("add", addButton);
@@ -171,9 +171,10 @@ void Vocabulary::cbOnConfirmAddWord()
 
 
 
-void Vocabulary::cbOnSearch()
+void Vocabulary::cbOnSearch(const Glib::ustring string)
 {
-  Log::print("search clicked");
+  Log::print("search clicked ");
+  Log::print(string + _search->get_text());
 }
 
 

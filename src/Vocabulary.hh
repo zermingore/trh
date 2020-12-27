@@ -30,7 +30,7 @@ public:
 
 
 private:
-  void cbOnSearch();
+  void cbOnSearch(const Glib::ustring string);
   void cbEditWord();
   void cbOnAdd();
   void cbOnConfirmAddWord();
@@ -46,6 +46,7 @@ private:
   const std::vector<std::string> _categories;
   const std::vector<std::string> _languages;
 
+  Gtk::SearchEntry* _search; ///< Keeping in the class to access the string
 
   bool _editMode = false;
   bool _addWordDisplayed = false;
