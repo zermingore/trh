@@ -10,8 +10,8 @@
 
 
 
-SQL_INSERT="INSERT INTO words(id_language, id_category, name)\
- VALUES(__ID_LG__, __ID_CAT__, \"__NAME__\");"
+SQL_INSERT="INSERT INTO words(id_language, id_category, name, date)\
+ VALUES(__ID_LG__, __ID_CAT__, \"__NAME__\", \"1970-01-01 00:00:00\");"
 
 SQL_INSERT_TR="INSERT INTO translations(id_word_src, id_word_dst) VALUES(\
  (SELECT id FROM words WHERE id_language=__ID_LG__ AND name=\"__NAME__\" AND id_category=__ID_CAT__),\
