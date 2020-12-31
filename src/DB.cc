@@ -182,6 +182,16 @@ void DB::getWordsLanguageSortedInsertionDate(int language_id, void *first)
 
 
 
+void DB::getWordsUser(void *first)
+{
+  const std::string request =
+    "SELECT * FROM words WHERE date > '1970-01-02' ORDER BY name ASC";
+
+  rawRequest(request.c_str(), dbFetchWords, first);
+}
+
+
+
 void DB::getWord(int word_id, void *first)
 {
   const std::string request = "SELECT * FROM words WHERE id=" + std::to_string(word_id);

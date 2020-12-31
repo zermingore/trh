@@ -44,6 +44,10 @@ Vocabulary::Vocabulary(Glib::RefPtr<Gtk::Builder> builder)
   _builder->get_widget("sort", sortButton);
   sortButton->signal_clicked().connect(sigc::mem_fun(*this, &Vocabulary::cbOnSortWords));
 
+  Gtk::Button* userButton;
+  _builder->get_widget("user", userButton);
+  userButton->signal_clicked().connect(sigc::mem_fun(*this, &Vocabulary::cbOnUserWords));
+
   Gtk::Button* editButton;
   _builder->get_widget("edit", editButton);
   editButton->signal_clicked().connect(sigc::mem_fun(*this, &Vocabulary::cbEditWord));
@@ -283,7 +287,6 @@ void Vocabulary::cbOnSortWords()
   Gtk::Entry *entryName = nullptr;
   _builder->get_widget("addWordName", entryName);
 
-
   // Refresh the vocabulary list
   DbTableColumnsWords tableColumnsWords;
   Gtk::TreeView* vocabularyList = nullptr;
@@ -296,4 +299,31 @@ void Vocabulary::cbOnSortWords()
     sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
 
   DB::getWordsLanguageSortedInsertionDate(2, (void*) treeModel.get());
+}
+
+
+
+void Vocabulary::cbOnUserWords()
+{
+  _userShownOnly = !_userShownOnly;
+
+  // Refresh the vocabulary list
+  DbTableColumnsWords tableColumnsWords;
+  Gtk::TreeView* vocabularyList = nullptr;
+  _builder->get_widget("vocabularyList", vocabularyList);
+  Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
+  vocabularyList->set_model(treeModel);
+
+  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
+  refTreeSelection->signal_changed().connect(
+    sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
+
+  if (_userShownOnly)
+  {
+    DB::getWordsUser((void*) treeModel.get());
+  }
+  else
+  {
+    DB::getWordsLanguageSortedName(2, (void*) treeModel.get());
+  }
 }

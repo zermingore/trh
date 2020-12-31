@@ -47,7 +47,7 @@ CREATE TABLE words(
   id_category INTEGER NOT NULL,
 
   name TEXT,
-  date TEXT DEFAULT CURRENT_TIMESTAMP,
+  date DATE DEFAULT (datetime('now','localtime')),
 
   FOREIGN KEY(id_category) REFERENCES categories(id)
   FOREIGN KEY(id_language) REFERENCES languages(id)

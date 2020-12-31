@@ -36,6 +36,7 @@ private:
   void cbOnConfirmAddWord();
   void cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection);
   void cbOnSortWords();
+  void cbOnUserWords();
 
 
   const Glib::RefPtr<Gtk::Builder> _builder;
@@ -50,6 +51,7 @@ private:
 
   bool _editMode = false;
   bool _addWordDisplayed = false;
+  bool _userShownOnly = false;
   Gtk::Box *_boxAddWord;
   Word _selectedWord;
 };

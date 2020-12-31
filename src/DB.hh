@@ -70,6 +70,13 @@ public:
   static void getWordsLanguageSortedInsertionDate(int language_id, void *first);
 
   /**
+   * @brief Get words manualy inserted by the user
+   * @param first first result
+   * @warning throws
+   */
+  static void getWordsUser(void *first);
+
+  /**
    * @brief Get a specific word
    * @param word_id id of the word to fetch
    * @param first first result
