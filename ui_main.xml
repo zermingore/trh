@@ -84,6 +84,12 @@
         </child>
 
         <child>
+          <object class="GtkButton" id="language">
+            <property name="visible">True</property>
+          </object>
+        </child>
+
+        <child>
           <object class="GtkButton" id="user">
             <property name="visible">True</property>
             <!-- <property name="sensitive">False</property> -->

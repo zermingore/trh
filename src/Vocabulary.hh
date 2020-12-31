@@ -37,6 +37,7 @@ private:
   void cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection);
   void cbOnSortWords();
   void cbOnUserWords();
+  void cbSwitchLanguage();
 
 
   const Glib::RefPtr<Gtk::Builder> _builder;
@@ -52,6 +53,7 @@ private:
   bool _editMode = false;
   bool _addWordDisplayed = false;
   bool _userShownOnly = false;
+  size_t _currentLanguage = 0;
   Gtk::Box *_boxAddWord;
   Word _selectedWord;
 };
