@@ -1,7 +1,3 @@
-INSERT INTO languages(name) VALUES("English");
-INSERT INTO CONSTANTS(name, value) VALUES("language_english", last_insert_rowid());
-
-
 INSERT INTO categories(name) VALUES("unknown");
 INSERT INTO CONSTANTS(name, value) VALUES("category_unknown", last_insert_rowid());
 
