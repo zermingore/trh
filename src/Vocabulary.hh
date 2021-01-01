@@ -23,6 +23,16 @@ struct Word
 };
 
 
+enum e_sort_method: uint8_t
+{
+  ALPHA = 0,
+  NEWEST,
+
+  NB_SORT_METHODS
+};
+
+
+
 class Vocabulary
 {
 public:
@@ -56,6 +66,8 @@ private:
   size_t _currentLanguage = 0;
   Gtk::Box *_boxAddWord;
   Word _selectedWord;
+
+  uint8_t _sortMethod = e_sort_method::ALPHA;
 };
 
 

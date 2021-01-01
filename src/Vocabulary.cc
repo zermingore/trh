@@ -288,6 +288,8 @@ void Vocabulary::cbOnAdd()
 
 void Vocabulary::cbOnSortWords()
 {
+  _sortMethod = (_sortMethod + 1) % static_cast<uint8_t> (e_sort_method::NB_SORT_METHODS);
+
   Gtk::Entry *entryName = nullptr;
   _builder->get_widget("addWordName", entryName);
 
@@ -302,7 +304,21 @@ void Vocabulary::cbOnSortWords()
   refTreeSelection->signal_changed().connect(
     sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
 
-  DB::getWordsLanguageSortedInsertionDate(_currentLanguage + 1, (void*) treeModel.get());
+
+  switch (_sortMethod)
+  {
+    case e_sort_method::ALPHA:
+      DB::getWordsLanguageSortedName(_currentLanguage + 1, (void*) treeModel.get());
+      break;
+
+    case e_sort_method::NEWEST:
+      DB::getWordsLanguageSortedInsertionDate(_currentLanguage + 1, (void*) treeModel.get());
+      break;
+
+    default:
+      Log::error("Invalid sorting method", static_cast<uint8_t> (_sortMethod));
+      break;
+  }
 }
 
 
