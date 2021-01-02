@@ -17,10 +17,6 @@ Grammar::Grammar(Glib::RefPtr<Gtk::Builder> builder)
   grammarRulesTitles->set_model(treeModelGrammar);
   grammarRulesTitles->set_headers_visible(false);
 
-  // Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammar = grammarRulesTitles->get_selection();
-  // refTreeSelectionGrammar->signal_changed().connect(
-  //   sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelectionGrammar));
-
   DB::getGrammarRulesTitles((void*) treeModelGrammar.get());
   grammarRulesTitles->append_column("title", tableGrammarRules.title);
 
@@ -32,10 +28,6 @@ Grammar::Grammar(Glib::RefPtr<Gtk::Builder> builder)
   grammarRulesContent->set_model(treeModelGrammarContent);
   grammarRulesContent->set_headers_visible(false);
   grammarRulesContent->get_selection()->set_mode(Gtk::SELECTION_NONE);
-
-  // Glib::RefPtr<Gtk::TreeSelection> refTreeSelectionGrammarContent = grammarRulesContent->get_selection();
-  // refTreeSelectionGrammarContent->signal_changed().connect(
-  //   sigc::bind(sigc::mem_fun(*this, &MainWindow::cbOnSelectionChanged), refTreeSelectionGrammarContent));
 
   DB::getGrammarRulesTitles((void*) treeModelGrammarContent.get());
   grammarRulesContent->append_column("content", tableGrammarRules.content);

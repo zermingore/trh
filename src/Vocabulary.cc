@@ -116,6 +116,8 @@ void Vocabulary::cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection
   _editMode = false;
   _boxAddWord->hide();
 
+  Log::print("selectionChanged\n");
+
   Gtk::TreeModel::iterator iter = selection->get_selected();
   if (iter)
   {
@@ -170,10 +172,6 @@ void Vocabulary::cbOnConfirmAddWord()
   Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
   vocabularyList->set_model(treeModel);
 
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
-  refTreeSelection->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
-
   DB::getWordsLanguageSortedName(_currentLanguage + 1, (void*) treeModel.get());
 }
 
@@ -191,9 +189,6 @@ void Vocabulary::cbOnSearch(const Glib::ustring string)
   Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
   vocabularyList->set_model(treeModel);
 
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
-  refTreeSelection->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
   DB::getWordsLanguageSortedName(_currentLanguage + 1, (void*) treeModel.get(), _search->get_text());
 }
 
@@ -300,11 +295,6 @@ void Vocabulary::cbOnSortWords()
   Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
   vocabularyList->set_model(treeModel);
 
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
-  refTreeSelection->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
-
-
   switch (_sortMethod)
   {
     case e_sort_method::ALPHA:
@@ -334,10 +324,6 @@ void Vocabulary::cbOnUserWords()
   Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
   vocabularyList->set_model(treeModel);
 
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
-  refTreeSelection->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
-
   if (_userShownOnly)
   {
     DB::getWordsUser((void*) treeModel.get());
@@ -360,11 +346,6 @@ void Vocabulary::cbSwitchLanguage()
   _builder->get_widget("vocabularyList", vocabularyList);
   Glib::RefPtr<Gtk::ListStore> treeModel = Gtk::ListStore::create(tableColumnsWords);
   vocabularyList->set_model(treeModel);
-
-  Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = vocabularyList->get_selection();
-  refTreeSelection->signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &Vocabulary::cbOnSelectionChanged), refTreeSelection));
-
 
   Gtk::Button* languageButton;
   _builder->get_widget("language", languageButton);
