@@ -4,6 +4,7 @@ lib/sqlite.c lib/sqlite.h come from the SQLite project (https://sqlite.org)
 
 
 You may want to initialize the DB to get started using ./init_db.sh
+A desktop launcher entry can be generated running tools/create_desktop_entry.sh
 
 In order to handle your own DB (vocabulary / grammar)
 You can create a file with your own default words / supported languages
