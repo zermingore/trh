@@ -52,10 +52,16 @@ Vocabulary::Vocabulary(Glib::RefPtr<Gtk::Builder> builder)
   _builder->get_widget("edit", editButton);
   editButton->signal_clicked().connect(sigc::mem_fun(*this, &Vocabulary::cbEditWord));
 
-
   Gtk::TreeView* list;
   _builder->get_widget("vocabularyList", list);
   auto row = Gtk::make_managed<Gtk::Button>("word");
+
+
+  _buffer = Gtk::TextBuffer::create();
+  builder->get_widget("translations", _view);
+  _view->set_monospace(true);
+  _view->set_buffer(_buffer);
+  _bufIter = _buffer->get_iter_at_offset(0);
 
 
   row->show();
@@ -139,6 +145,9 @@ void Vocabulary::cbOnSelectionChanged(Glib::RefPtr<Gtk::TreeSelection> selection
       for (auto c: list_words->children())
       {
         row[tableCol.name] = static_cast<Glib::ustring> (c[word.name]);
+        std::stringstream sstr;
+        sstr << _languages[c[word.language] - 1] << ": " << c[word.name] << "\n";
+        _bufIter = _buffer->insert(_bufIter, sstr.str().c_str());
       }
     }
   }

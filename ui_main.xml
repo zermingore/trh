@@ -234,12 +234,31 @@
       </object>
     </child>
 
-    <!-- Debug console -->
+    <!-- Translations -->
     <child>
       <object class="GtkSeparator"/>
     </child>
     <child>
-      <object class="GtkScrolledWindow" id="consoleWindow">
+      <object class="GtkScrolledWindow" id="translationsWindow">
+      <property name="visible">True</property>
+      <property name="hscrollbar_policy">automatic</property>
+      <property name="vscrollbar_policy">automatic</property>
+      <!-- <property name="min_content_height">100</property> -->
+      <child>
+        <object class="GtkTextView" id="translations">
+          <property name="visible">True</property>
+          <property name="editable">False</property>
+        </object>
+      </child>
+    </object>
+  </child>
+
+  <!-- Debug console -->
+  <child>
+    <object class="GtkSeparator"/>
+  </child>
+  <child>
+    <object class="GtkScrolledWindow" id="consoleWindow">
       <property name="visible">True</property>
       <property name="hscrollbar_policy">automatic</property>
       <property name="vscrollbar_policy">automatic</property>

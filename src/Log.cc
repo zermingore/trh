@@ -43,7 +43,6 @@ void Log::init(Glib::RefPtr<Gtk::Builder> builder)
 
 
 
-
 void Log::print()
 {
   std::cout << _printerAccu.str() << COLOR_NORMAL;

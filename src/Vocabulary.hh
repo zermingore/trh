@@ -68,6 +68,11 @@ private:
   Word _selectedWord;
 
   uint8_t _sortMethod = e_sort_method::ALPHA;
+
+
+  Gtk::TextView* _view;
+  Glib::RefPtr<Gtk::TextBuffer> _buffer;
+  Gtk::TextIter _bufIter;
 };
 
 
