@@ -1,4 +1,4 @@
-if ( ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} )
+if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "Out of tree build mandatory. Use the Makefile (run make, not cmake)")
 endif()
 
@@ -17,7 +17,10 @@ find_package(Threads REQUIRED)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpthread -ldl -Og -g -ggdb")
 
-include_directories("${PRJ_ROOT}") # In order to find the libs
+
+if (NOT ${PRJ_ROOT} STREQUAL "")
+  include_directories("${PRJ_ROOT}") # In order to find the libs
+endif()
 include_directories("${PROJECT_SOURCE_DIR}/")
 include_directories("${PROJECT_SOURCE_DIR}/src/gtk/")
 include_directories(SYSTEM "${GTK3_INCLUDE_DIRS}")

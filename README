@@ -16,3 +16,14 @@ NOTE: If db/custom/ does not exist, the default DB creation will print a warning
 
 In order to compile, you will need the gtk3 and its C++ interface libraries.
 Debian package names: libgtk-3-dev libgtkmm-3.0-dev
+
+
+
+Cross Build:
+
+You may want to make your custom rootfs RFS available
+(eventually, with partition offset)
+sudo mount -o loop,offset=PARTITION_OFFSET rfs.img mount_point
+
+A complete AARCH-64 example is available:
+cmake -DCMAKE_SYSROOT=/path/to/rfs -DCMAKE_TOOLCHAIN_FILE=../../cross_build_aa64 -D PRJ_ROOT=. -B build/ -S src/gtk/ && make -j8
