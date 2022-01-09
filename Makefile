@@ -1,10 +1,11 @@
 BUILD_DIR=./build
 PRJ_NAME=trh
 
+all: gtk
 
-all:
+gtk:
 	@ mkdir -p $(BUILD_DIR)
-	cmake -B $(BUILD_DIR)
+	cmake src/gtk/CMakeLists.txt -B $(BUILD_DIR) -D PRJ_ROOT=$(shell pwd)
 	$(MAKE) -C $(BUILD_DIR)
 	@ cp $(BUILD_DIR)/$(PRJ_NAME) ./
 
