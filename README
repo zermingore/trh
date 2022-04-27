@@ -14,9 +14,10 @@ NOTE: If db/custom/ does not exist, the default DB creation will print a warning
 
 
 
-In order to compile, you will need the gtk3 and its C++ interface libraries.
-Debian package names: libgtk-3-dev libgtkmm-3.0-dev
+In order to compile, you will need make, cmake and gtk3 with its C++ interface libraries.
+Debian package names: build-essential cmake libgtk-3-dev libgtkmm-3.0-dev
 
+To use the DB, you'll need sqlite3
 
 
 Cross Build:
